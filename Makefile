@@ -9,7 +9,7 @@ BUILD_DIR := bin
 DSP_BIN := dsp
 
 CXXFLAGS := -mconsole -std=c++17 -g -Wall -I$(SRC_DIR)
-LDFLAGS := -mconsole -lOpenAL32
+LDFLAGS := -mconsole -lOpenAL32 -lliquid -lfftw3f
 #-lliquid -lSoapySDR -lboost_thread -lboost_chrono -lboost_system
 
 DSP_SRC = $(wildcard src/*.cpp)

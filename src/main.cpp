@@ -1,7 +1,7 @@
 #include "AudioFrontend.hpp"
 
-#include "squelch.hpp"
-#include "agc.hpp"
+#include "dsp/squelch.hpp"
+#include "dsp/agc.hpp"
 
 #include <cstdint>
 #include <cstddef>

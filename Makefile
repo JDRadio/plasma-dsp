@@ -25,13 +25,16 @@ default: dsp
 
 dsp: build_dirs build_dsp
 
+run:
+	$(BUILD_DIR)/$(DSP_BIN)
+
 -include $(ALLOBJ:.o=.d)
 
 build_dsp: $(DSP_OBJ)
 	$(CXX) -o $(BUILD_DIR)/$(DSP_BIN) $^ $(LDFLAGS)
 
 build_dirs: $(OBJDIRS)
-	$(call MKDIR, $(BUILD_DIR))
+	@$(call MKDIR, $(BUILD_DIR))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
@@ -42,10 +45,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@-rm -f $(@:.o=.d.tmp)
 
 $(OBJDIRS):
-	$(call MKDIR, $(@D))
+	@$(call MKDIR, $(@D))
 
 .PHONY: clean
 clean:
 	$(call RM, $(BUILD_DIR)/$(DSP_BIN))
 	$(call RM, $(DSP_OBJ))
-

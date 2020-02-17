@@ -10,9 +10,9 @@ namespace dsp {
 class squelch {
 public:
     enum class status {
-        off,        // no squelch, signal is strong
-        on,         // squelched, signal is weak
-        holding     // holding, signal is falling
+        off,        //!< no squelch, signal is strong
+        on,         //!< squelched, signal is weak
+        holding     //!< holding, signal is falling
     };
 
     squelch(void);

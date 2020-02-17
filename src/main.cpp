@@ -2,6 +2,7 @@
 
 #include "dsp/squelch.hpp"
 #include "dsp/agc.hpp"
+#include "dsp/fir.hpp"
 
 #include <cstdint>
 #include <cstddef>
@@ -34,6 +35,9 @@ int main(int argc, char* argv[])
     squelch.set_threshold(-50.f);
     squelch.set_timeout(240);
 
+    dsp::fir fir;
+    fir.set_taps({1.f/3.f, 1.f/3.f, 1.f/3.f});
+
     while (true) {
         audio->receive(buffer_in.data(), buffer_in.size());
         // 48 kHz
@@ -43,6 +47,9 @@ int main(int argc, char* argv[])
         for (auto& n : buffer_down) {
             dsp::squelch::status sq = squelch.execute(n);
             n = agc.execute(n);
+
+            fir.push_complex(n);
+            n = fir.execute_complex();
 
             if (sq == dsp::squelch::status::on) {
                 agc.lock();

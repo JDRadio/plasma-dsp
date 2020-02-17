@@ -1,5 +1,5 @@
 CXX = g++
-RM = rm $1
+RM = rm -f $1
 MKDIR = mkdir -p $1
 
 SRC_DIR := src
@@ -12,7 +12,7 @@ CXXFLAGS := -mconsole -std=c++17 -g -Wall -I$(SRC_DIR)
 LDFLAGS := -mconsole -lOpenAL32 -lliquid -lfftw3f
 #-lliquid -lSoapySDR -lboost_thread -lboost_chrono -lboost_system
 
-DSP_SRC = $(wildcard src/*.cpp)
+DSP_SRC = $(wildcard src/*.cpp src/dsp/*.cpp)
 
 DSP_OBJ = $(patsubst %.cpp,%.o,$(DSP_SRC:$(SRC_DIR)/%=$(OBJ_DIR)/%))
 

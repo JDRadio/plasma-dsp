@@ -23,7 +23,7 @@ void fir::set_taps(vector<float> const& taps)
     taps_.resize(taps.size());
 
     for (size_t i = 0; i < taps.size(); i++) {
-        taps_[i] = taps[i];
+        taps_[i] = taps[taps.size() - i];
     }
 
     samples_.clear();
@@ -32,7 +32,8 @@ void fir::set_taps(vector<float> const& taps)
 
 void fir::set_complex_taps(vector<complex<float>> const& taps)
 {
-    taps_ = taps;
+    taps_.clear();
+    taps_.insert(taps_.end(), taps.rbegin(), taps.rend());
     samples_.clear();
     samples_.resize(taps_.size(), 0);
 }

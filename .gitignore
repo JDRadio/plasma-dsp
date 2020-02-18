@@ -1,3 +1,10 @@
 bin/
 obj/
 *.swp
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.pdf
+*.synctex.gz
+*.synctex(busy)

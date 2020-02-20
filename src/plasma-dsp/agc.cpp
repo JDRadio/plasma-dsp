@@ -1,4 +1,4 @@
-#include "agc.hpp"
+#include "plasma-dsp/agc.hpp"
 #include <cmath>
 
 namespace dsp {

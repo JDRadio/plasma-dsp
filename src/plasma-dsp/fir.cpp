@@ -1,4 +1,4 @@
-#include "fir.hpp"
+#include "plasma-dsp/fir.hpp"
 
 namespace dsp {
 

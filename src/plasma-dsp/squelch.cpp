@@ -1,4 +1,4 @@
-#include "squelch.hpp"
+#include "plasma-dsp/squelch.hpp"
 #include <cmath>
 
 namespace dsp {

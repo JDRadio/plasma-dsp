@@ -20,7 +20,7 @@ OBJ_DIR := obj
 BIN_DIR := bin
 LIB_DIR := lib
 INC_DIR := include
-PREFIX	:=
+PREFIX	:= /usr/local
 
 # Projects
 APPLICATION_PROJECTS	:= main

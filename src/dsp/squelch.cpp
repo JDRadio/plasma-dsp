@@ -5,12 +5,12 @@ namespace dsp {
 
 squelch::squelch(void)
     : alpha_(0.1f)
-    , energy_(1.f)
+    , energy_(0.f)
     , locked_(false)
     , threshold_(-60.f)
     , timeout_(100)
     , timer_(0)
-    , status_(status::off)
+    , status_(status::on)
 {
 }
 

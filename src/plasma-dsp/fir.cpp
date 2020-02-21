@@ -23,7 +23,7 @@ void fir::set_taps(vector<float> const& taps)
     taps_.resize(taps.size());
 
     for (size_t i = 0; i < taps.size(); i++) {
-        taps_[i] = taps[taps.size() - i];
+        taps_[i] = taps[taps.size() - i - 1];
     }
 
     samples_.clear();

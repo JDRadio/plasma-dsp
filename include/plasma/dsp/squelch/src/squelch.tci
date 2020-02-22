@@ -1,0 +1,168 @@
+#include <cmath>
+
+namespace dsp {
+
+template <typename T>
+squelch_t<T>::squelch_t(void)
+    : alpha_(0.1)
+    , energy_(0.)
+    , locked_(false)
+    , threshold_(-60.)
+    , timeout_(100)
+    , timer_(0)
+    , status_(status::on)
+{
+}
+
+template <typename T>
+void squelch_t<T>::set_status(status s)
+{
+    status_ = s;
+}
+
+template <typename T>
+typename squelch_t<T>::status squelch_t<T>::get_status(void) const
+{
+    return status_;
+}
+
+template <typename T>
+bool squelch_t<T>::squelched(void) const
+{
+    return status_ == status::on;
+}
+
+template <typename T>
+T squelch_t<T>::get_threshold(void) const
+{
+    return threshold_;
+}
+
+template <typename T>
+void squelch_t<T>::set_threshold(T threshold)
+{
+    threshold_ = threshold;
+}
+
+template <typename T>
+unsigned int squelch_t<T>::get_timeout(void) const
+{
+    return timeout_;
+}
+
+template <typename T>
+void squelch_t<T>::set_timeout(unsigned int timeout)
+{
+    timeout_ = timeout;
+}
+
+template <typename T>
+T squelch_t<T>::get_bandwidth(void) const
+{
+    return alpha_;
+}
+
+template <typename T>
+void squelch_t<T>::set_bandwidth(T bandwidth)
+{
+    alpha_ = bandwidth;
+}
+
+template <typename T>
+T squelch_t<T>::get_rssi(void) const
+{
+    return 10. * log10(energy_);
+}
+
+template <typename T>
+void squelch_t<T>::set_rssi(T rssi)
+{
+    energy_ = pow(10., rssi / 10.);
+}
+
+template <typename T>
+void squelch_t<T>::lock(void)
+{
+    locked_ = true;
+}
+
+template <typename T>
+void squelch_t<T>::unlock(void)
+{
+    locked_ = false;
+}
+
+template <typename T>
+bool squelch_t<T>::locked(void) const
+{
+    return locked_;
+}
+
+template <typename T>
+typename squelch_t<T>::status squelch_t<T>::internal_execute(T energy)
+{
+    energy_ = (1. - alpha_) * energy_ + alpha_ * energy;
+
+    if (locked_) {
+        return status_;
+    }
+
+    bool above_threshold = this->get_rssi() > threshold_;
+
+    if (above_threshold) {
+        status_ = status::off;
+    }
+    else {
+        if (status_ == status::off) {
+            status_ = status::holding;
+            timer_ = timeout_;
+        }
+        else if (status_ == status::holding) {
+            timer_--;
+
+            if (timer_ == 0) {
+                status_ = status::on;
+            }
+        }
+    }
+
+    return status_;
+}
+
+template <typename T>
+typename squelch_t<T>::status squelch_t<T>::execute(T x)
+{
+    return this->internal_execute(x * x);
+}
+
+template <typename T>
+vector<typename squelch_t<T>::status> squelch_t<T>::execute(vector<T> const& in)
+{
+    vector<status> out(in.size());
+
+    for (size_t i = 0; i < in.size(); i++) {
+        out[i] = this->internal_execute(in[i] * in[i]);
+    }
+
+    return out;
+}
+
+template <typename T>
+typename squelch_t<T>::status squelch_t<T>::execute_complex(complex<T> x)
+{
+    return this->internal_execute(abs(x) * abs(x));
+}
+
+template <typename T>
+vector<typename squelch_t<T>::status> squelch_t<T>::execute_complex(vector<complex<T>> const& in)
+{
+    vector<status> out(in.size());
+
+    for (size_t i = 0; i < in.size(); i++) {
+        out[i] = this->internal_execute(abs(in[i]) * abs(in[i]));
+    }
+
+    return out;
+}
+
+} // namespace

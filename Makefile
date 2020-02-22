@@ -27,7 +27,7 @@ APPLICATION_PROJECTS	:= main
 TEST_PROJECTS			:=
 
 # Library Projects
-BASE_LIBRARY		:= plasma-dsp
+BASE_LIBRARY		:= plasma
 
 # Debug Projects
 APPLICATION_PROJECTS_D	= $(addsuffix _d,$(APPLICATION_PROJECTS))
@@ -39,7 +39,7 @@ BASE_LIBRARY_D			= $(addsuffix _d,$(BASE_LIBRARY))
 # Source Files
 APPLICATION_SRC	= $(wildcard $(SRC_DIR)/*.cpp)
 TEST_SRC		= $(wildcard $(SRC_DIR)/test/*.cpp)
-BASE_SRC		= $(wildcard $(SRC_DIR)/plasma-dsp/*.cpp)
+BASE_SRC		= $(wildcard $(SRC_DIR)/dsp/*.cpp)
 
 # Object Files
 APPLICATION_OBJ	= $(patsubst %.cpp,%.o,$(APPLICATION_SRC:$(SRC_DIR)/%=$(OBJ_DIR)/%))
@@ -71,12 +71,12 @@ CXXFLAGS_TEST_D			= $(CXXFLAGS_BASE_D)
 
 # LD Flags
 LDFLAGS_BASE			=
-LDFLAGS_APPLICATION		= -L$(LIB_DIR) -l$(BASE_LIBRARY) -lliquid -lOpenAL32 -lfftw3f
+LDFLAGS_APPLICATION		= -L$(LIB_DIR) -l$(BASE_LIBRARY) -lliquid -lopenal -lfftw3f
 LDFLAGS_TEST			= -L$(LIB_DIR) -l$(BASE_LIBRARY) -lgtest
 
 # LD Debug Flags
 LDFLAGS_BASE_D			=
-LDFLAGS_APPLICATION_D	= -L$(LIB_DIR) -l$(BASE_LIBRARY_D) -lliquid -lOpenAL32 -lfftw3f
+LDFLAGS_APPLICATION_D	= -L$(LIB_DIR) -l$(BASE_LIBRARY_D) -lliquid -lopenal -lfftw3f
 LDFLAGS_TEST_D			= -L$(LIB_DIR) -l$(BASE_LIBRARY_D) -lgtest
 
 # OS-Specific Options

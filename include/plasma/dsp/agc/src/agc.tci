@@ -1,0 +1,189 @@
+#include <cmath>
+
+namespace dsp {
+
+template <typename T>
+agc_t<T>::agc_t(void)
+    : max_gain_(1e6)
+    , min_gain_(1e-6)
+    , gain_(1.0)
+    , scale_(1.0)
+    , alpha_(0.01)
+    , energy_(1.0)
+    , locked_(false)
+{
+}
+
+template <typename T>
+T agc_t<T>::get_max_gain(void) const
+{
+    return max_gain_;
+}
+
+template <typename T>
+void agc_t<T>::set_max_gain(T max_gain)
+{
+    max_gain_ = max_gain;
+    this->clamp_gain();
+}
+
+template <typename T>
+T agc_t<T>::get_min_gain(void) const
+{
+    return min_gain_;
+}
+
+template <typename T>
+void agc_t<T>::set_min_gain(T min_gain)
+{
+    min_gain_ = min_gain;
+    this->clamp_gain();
+}
+
+template <typename T>
+void agc_t<T>::set_gain_limits(T min_gain, T max_gain)
+{
+    min_gain_ = min_gain;
+    max_gain_ = max_gain;
+    this->clamp_gain();
+}
+
+template <typename T>
+T agc_t<T>::get_scale(void) const
+{
+    return scale_;
+}
+
+template <typename T>
+void agc_t<T>::set_scale(T scale)
+{
+    scale_ = scale;
+}
+
+template <typename T>
+T agc_t<T>::get_bandwidth(void) const
+{
+    return alpha_;
+}
+
+template <typename T>
+void agc_t<T>::set_bandwidth(T bandwidth)
+{
+    alpha_ = bandwidth;
+}
+
+template <typename T>
+T agc_t<T>::get_rssi(void) const
+{
+    return -20. * log10(gain_);
+}
+
+template <typename T>
+void agc_t<T>::set_rssi(T rssi)
+{
+    this->set_gain(pow(10., -rssi / 20.));
+}
+
+template <typename T>
+T agc_t<T>::get_gain(void) const
+{
+    return gain_;
+}
+
+template <typename T>
+void agc_t<T>::set_gain(T gain)
+{
+    gain_ = gain;
+    this->clamp_gain();
+}
+
+template <typename T>
+void agc_t<T>::lock(void)
+{
+    locked_ = true;
+}
+
+template <typename T>
+void agc_t<T>::unlock(void)
+{
+    locked_ = false;
+}
+
+template <typename T>
+bool agc_t<T>::locked(void) const
+{
+    return locked_;
+}
+
+template <typename T>
+void agc_t<T>::internal_execute(T energy)
+{
+    energy_ = (1. - alpha_) * energy_ + alpha_ * energy;
+
+    if (locked_) {
+        return;
+    }
+
+    if (energy_ > 1e-16) {
+        gain_ *= pow(energy_, -0.5 * alpha_);
+    }
+
+    this->clamp_gain();
+}
+
+template <typename T>
+T agc_t<T>::execute(T x)
+{
+    T y = x * gain_;
+    this->internal_execute(y * y);
+    return y * scale_;
+}
+
+template <typename T>
+vector<T> agc_t<T>::execute(vector<T> const& in)
+{
+    vector<T> out = in;
+
+    for (auto& y : out) {
+        y *= gain_;
+        this->internal_execute(y * y);
+        y *= scale_;
+    }
+
+    return out;
+}
+
+template <typename T>
+complex<T> agc_t<T>::execute_complex(complex<T> x)
+{
+    complex<T> y = x * gain_;
+    this->internal_execute(abs(y) * abs(y));
+    return y * scale_;
+}
+
+template <typename T>
+vector<complex<T>> agc_t<T>::execute_complex(vector<complex<T>> const& in)
+{
+    vector<complex<T>> out = in;
+
+    for (auto& y : out) {
+        y *= gain_;
+        this->internal_execute(abs(y) * abs(y));
+        y *= scale_;
+    }
+
+    return out;
+}
+
+template <typename T>
+void agc_t<T>::clamp_gain(void)
+{
+    if (gain_ > max_gain_) {
+        gain_ = max_gain_;
+    }
+    else if (gain_ < min_gain_) {
+        gain_ = min_gain_;
+    }
+}
+
+} // namespace

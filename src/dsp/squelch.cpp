@@ -1,9 +1,9 @@
+#include "plasma/dsp/squelch.hpp"
 #include <cmath>
 
 namespace dsp {
 
-template <typename T>
-squelch_t<T>::squelch_t(void)
+squelch::squelch(void)
     : alpha_(0.1)
     , energy_(0.)
     , locked_(false)
@@ -14,92 +14,77 @@ squelch_t<T>::squelch_t(void)
 {
 }
 
-template <typename T>
-void squelch_t<T>::set_status(status s)
+void squelch::set_status(status s)
 {
     status_ = s;
 }
 
-template <typename T>
-typename squelch_t<T>::status squelch_t<T>::get_status(void) const
+squelch::status squelch::get_status(void) const
 {
     return status_;
 }
 
-template <typename T>
-bool squelch_t<T>::squelched(void) const
+bool squelch::squelched(void) const
 {
     return status_ == status::on;
 }
 
-template <typename T>
-T squelch_t<T>::get_threshold(void) const
+double squelch::get_threshold(void) const
 {
     return threshold_;
 }
 
-template <typename T>
-void squelch_t<T>::set_threshold(T threshold)
+void squelch::set_threshold(double threshold)
 {
     threshold_ = threshold;
 }
 
-template <typename T>
-unsigned int squelch_t<T>::get_timeout(void) const
+unsigned int squelch::get_timeout(void) const
 {
     return timeout_;
 }
 
-template <typename T>
-void squelch_t<T>::set_timeout(unsigned int timeout)
+void squelch::set_timeout(unsigned int timeout)
 {
     timeout_ = timeout;
 }
 
-template <typename T>
-T squelch_t<T>::get_bandwidth(void) const
+double squelch::get_bandwidth(void) const
 {
     return alpha_;
 }
 
-template <typename T>
-void squelch_t<T>::set_bandwidth(T bandwidth)
+void squelch::set_bandwidth(double bandwidth)
 {
     alpha_ = bandwidth;
 }
 
-template <typename T>
-T squelch_t<T>::get_rssi(void) const
+double squelch::get_rssi(void) const
 {
     return 10. * log10(energy_);
 }
 
-template <typename T>
-void squelch_t<T>::set_rssi(T rssi)
+void squelch::set_rssi(double rssi)
 {
     energy_ = pow(10., rssi / 10.);
 }
 
-template <typename T>
-void squelch_t<T>::lock(void)
+void squelch::lock(void)
 {
     locked_ = true;
 }
 
-template <typename T>
-void squelch_t<T>::unlock(void)
+void squelch::unlock(void)
 {
     locked_ = false;
 }
 
-template <typename T>
-bool squelch_t<T>::locked(void) const
+bool squelch::locked(void) const
 {
     return locked_;
 }
 
-template <typename T>
-typename squelch_t<T>::status squelch_t<T>::internal_execute(T energy)
+squelch::status squelch::internal_execute(double energy)
 {
     energy_ = (1. - alpha_) * energy_ + alpha_ * energy;
 
@@ -129,14 +114,12 @@ typename squelch_t<T>::status squelch_t<T>::internal_execute(T energy)
     return status_;
 }
 
-template <typename T>
-typename squelch_t<T>::status squelch_t<T>::execute(T x)
+squelch::status squelch::execute(double x)
 {
     return this->internal_execute(x * x);
 }
 
-template <typename T>
-vector<typename squelch_t<T>::status> squelch_t<T>::execute(vector<T> const& in)
+vector<squelch::status> squelch::execute(vector<double> const& in)
 {
     vector<status> out(in.size());
 
@@ -147,14 +130,12 @@ vector<typename squelch_t<T>::status> squelch_t<T>::execute(vector<T> const& in)
     return out;
 }
 
-template <typename T>
-typename squelch_t<T>::status squelch_t<T>::execute_complex(complex<T> x)
+squelch::status squelch::execute_complex(complex<double> x)
 {
     return this->internal_execute(abs(x) * abs(x));
 }
 
-template <typename T>
-vector<typename squelch_t<T>::status> squelch_t<T>::execute_complex(vector<complex<T>> const& in)
+vector<squelch::status> squelch::execute_complex(vector<complex<double>> const& in)
 {
     vector<status> out(in.size());
 

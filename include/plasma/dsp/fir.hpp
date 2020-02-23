@@ -13,10 +13,7 @@ public:
     ~fir(void) = default;
 
     void set_taps(vector<double> const& taps);
-    void set_complex_taps(vector<complex<double>> const& taps);
-
-    void set_tapsf(vector<float> const& taps);
-    void set_complex_tapsf(vector<complex<float>> const& taps);
+    void set_taps_complex(vector<complex<double>> const& taps);
 
     void push(double x);
     double execute(void);

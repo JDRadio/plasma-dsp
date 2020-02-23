@@ -12,14 +12,4 @@ double math::sinc(double x)
     return sin(pi * x) / (pi * x);
 }
 
-// normalized sinc: sin(\pi x) / (\pi x)
-float math::sincf(float x)
-{
-    if (abs(x) < 0.01f) {
-        return cos(pif * x / 2.f) * cos(pif * x / 4.f) * cos(pif * x / 6.f);
-    }
-
-    return sin(pif * x) / (pif * x);
-}
-
 } // namespace

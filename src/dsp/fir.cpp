@@ -15,7 +15,7 @@ void fir::set_taps(vector<double> const& taps)
     samples_.resize(taps_.size(), 0);
 }
 
-void fir::set_complex_taps(vector<complex<double>> const& taps)
+void fir::set_taps_complex(vector<complex<double>> const& taps)
 {
     taps_.clear();
     taps_.insert(taps_.end(), taps.rbegin(), taps.rend());
@@ -31,7 +31,7 @@ void fir::push(double x)
 
 double fir::execute(void)
 {
-    complex<double> v = 0.f;
+    complex<double> v = 0;
 
     for (size_t i = 0; i < taps_.size(); i++) {
         v += taps_[i] * samples_[i];
@@ -48,7 +48,7 @@ void fir::push_complex(complex<double> x)
 
 complex<double> fir::execute_complex(void)
 {
-    complex<double> v = 0.f;
+    complex<double> v = 0;
 
     for (size_t i = 0; i < taps_.size(); i++) {
         v += taps_[i] * samples_[i];

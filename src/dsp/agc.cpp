@@ -1,9 +1,9 @@
+#include "plasma/dsp/agc.hpp"
 #include <cmath>
 
 namespace dsp {
 
-template <typename T>
-agc_t<T>::agc_t(void)
+agc::agc(void)
     : max_gain_(1e6)
     , min_gain_(1e-6)
     , gain_(1.0)
@@ -14,109 +14,92 @@ agc_t<T>::agc_t(void)
 {
 }
 
-template <typename T>
-T agc_t<T>::get_max_gain(void) const
+double agc::get_max_gain(void) const
 {
     return max_gain_;
 }
 
-template <typename T>
-void agc_t<T>::set_max_gain(T max_gain)
+void agc::set_max_gain(double max_gain)
 {
     max_gain_ = max_gain;
     this->clamp_gain();
 }
 
-template <typename T>
-T agc_t<T>::get_min_gain(void) const
+double agc::get_min_gain(void) const
 {
     return min_gain_;
 }
 
-template <typename T>
-void agc_t<T>::set_min_gain(T min_gain)
+void agc::set_min_gain(double min_gain)
 {
     min_gain_ = min_gain;
     this->clamp_gain();
 }
 
-template <typename T>
-void agc_t<T>::set_gain_limits(T min_gain, T max_gain)
+void agc::set_gain_limits(double min_gain, double max_gain)
 {
     min_gain_ = min_gain;
     max_gain_ = max_gain;
     this->clamp_gain();
 }
 
-template <typename T>
-T agc_t<T>::get_scale(void) const
+double agc::get_scale(void) const
 {
     return scale_;
 }
 
-template <typename T>
-void agc_t<T>::set_scale(T scale)
+void agc::set_scale(double scale)
 {
     scale_ = scale;
 }
 
-template <typename T>
-T agc_t<T>::get_bandwidth(void) const
+double agc::get_bandwidth(void) const
 {
     return alpha_;
 }
 
-template <typename T>
-void agc_t<T>::set_bandwidth(T bandwidth)
+void agc::set_bandwidth(double bandwidth)
 {
     alpha_ = bandwidth;
 }
 
-template <typename T>
-T agc_t<T>::get_rssi(void) const
+double agc::get_rssi(void) const
 {
     return -20. * log10(gain_);
 }
 
-template <typename T>
-void agc_t<T>::set_rssi(T rssi)
+void agc::set_rssi(double rssi)
 {
     this->set_gain(pow(10., -rssi / 20.));
 }
 
-template <typename T>
-T agc_t<T>::get_gain(void) const
+double agc::get_gain(void) const
 {
     return gain_;
 }
 
-template <typename T>
-void agc_t<T>::set_gain(T gain)
+void agc::set_gain(double gain)
 {
     gain_ = gain;
     this->clamp_gain();
 }
 
-template <typename T>
-void agc_t<T>::lock(void)
+void agc::lock(void)
 {
     locked_ = true;
 }
 
-template <typename T>
-void agc_t<T>::unlock(void)
+void agc::unlock(void)
 {
     locked_ = false;
 }
 
-template <typename T>
-bool agc_t<T>::locked(void) const
+bool agc::locked(void) const
 {
     return locked_;
 }
 
-template <typename T>
-void agc_t<T>::internal_execute(T energy)
+void agc::internal_execute(double energy)
 {
     energy_ = (1. - alpha_) * energy_ + alpha_ * energy;
 
@@ -131,18 +114,16 @@ void agc_t<T>::internal_execute(T energy)
     this->clamp_gain();
 }
 
-template <typename T>
-T agc_t<T>::execute(T x)
+double agc::execute(double x)
 {
-    T y = x * gain_;
+    double y = x * gain_;
     this->internal_execute(y * y);
     return y * scale_;
 }
 
-template <typename T>
-vector<T> agc_t<T>::execute(vector<T> const& in)
+vector<double> agc::execute(vector<double> const& in)
 {
-    vector<T> out = in;
+    vector<double> out = in;
 
     for (auto& y : out) {
         y *= gain_;
@@ -153,18 +134,16 @@ vector<T> agc_t<T>::execute(vector<T> const& in)
     return out;
 }
 
-template <typename T>
-complex<T> agc_t<T>::execute_complex(complex<T> x)
+complex<double> agc::execute_complex(complex<double> x)
 {
-    complex<T> y = x * gain_;
+    complex<double> y = x * gain_;
     this->internal_execute(abs(y) * abs(y));
     return y * scale_;
 }
 
-template <typename T>
-vector<complex<T>> agc_t<T>::execute_complex(vector<complex<T>> const& in)
+vector<complex<double>> agc::execute_complex(vector<complex<double>> const& in)
 {
-    vector<complex<T>> out = in;
+    vector<complex<double>> out = in;
 
     for (auto& y : out) {
         y *= gain_;
@@ -175,8 +154,7 @@ vector<complex<T>> agc_t<T>::execute_complex(vector<complex<T>> const& in)
     return out;
 }
 
-template <typename T>
-void agc_t<T>::clamp_gain(void)
+void agc::clamp_gain(void)
 {
     if (gain_ > max_gain_) {
         gain_ = max_gain_;

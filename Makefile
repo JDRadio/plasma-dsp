@@ -60,12 +60,12 @@ ALL_LIBRARIES_D	= $(addsuffix _d,$(ALL_LIBRARIES))
 ALL_PROJECTS_D	= $(addsuffix _d,$(ALL_PROJECTS))
 
 # CXX Flags
-CXXFLAGS_BASE			= -std=c++17 -Wall -O2 -I$(INC_DIR)
+CXXFLAGS_BASE			= -std=c++17 -Wall -Wextra -O2 -I$(INC_DIR)
 CXXFLAGS_APPLICATION	= $(CXXFLAGS_BASE)
 CXXFLAGS_TEST			= $(CXXFLAGS_BASE)
 
 # CXX Debug Flags
-CXXFLAGS_BASE_D			= -std=c++17 -Wall -g -I$(INC_DIR)
+CXXFLAGS_BASE_D			= -std=c++17 -Wall -Wextra -g -I$(INC_DIR)
 CXXFLAGS_APPLICATION_D	= $(CXXFLAGS_BASE_D)
 CXXFLAGS_TEST_D			= $(CXXFLAGS_BASE_D)
 

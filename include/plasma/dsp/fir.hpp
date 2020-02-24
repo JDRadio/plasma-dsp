@@ -15,6 +15,8 @@ public:
     void set_taps(vector<double> const& taps);
     void set_taps_complex(vector<complex<double>> const& taps);
 
+    void reset(void);
+
     void push(double x);
     double execute(void);
 

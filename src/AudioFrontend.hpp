@@ -23,17 +23,17 @@ public:
     ~AudioFrontend(void);
 
     size_t receive(int16_t* in, size_t in_size);
-    size_t receive(float* in, size_t in_size);
-    size_t receive(complex<float>* in, size_t in_size);
+    size_t receive(double* in, size_t in_size);
+    size_t receive(complex<double>* in, size_t in_size);
     void transmit(const int16_t* out, size_t out_size);
-    void transmit(const float* out, size_t out_size);
-    void transmit(const complex<float>* out, size_t out_size);
+    void transmit(const double* out, size_t out_size);
+    void transmit(const complex<double>* out, size_t out_size);
 
 private:
-    void samplesToFloat(const int16_t* in, size_t in_size, float* out);
-    void samplesToComplex(const int16_t* in, size_t in_size, complex<float>* out);
-    void floatToSamples(const float* in, size_t in_size, int16_t* out);
-    void complexToSamples(const complex<float>* in, size_t out_size, int16_t* out);
+    void samplesToDouble(const int16_t* in, size_t in_size, double* out);
+    void samplesToComplex(const int16_t* in, size_t in_size, complex<double>* out);
+    void doubleToSamples(const double* in, size_t in_size, int16_t* out);
+    void complexToSamples(const complex<double>* in, size_t out_size, int16_t* out);
 
     static constexpr ALCuint m_samplingRate = 48000;
     static constexpr ALCsizei m_captureBufferSize = m_samplingRate / 2;

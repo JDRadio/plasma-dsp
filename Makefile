@@ -71,12 +71,12 @@ CXXFLAGS_TEST_D			= $(CXXFLAGS_BASE_D)
 
 # LD Flags
 LDFLAGS_BASE			=
-LDFLAGS_APPLICATION		= -L$(LIB_DIR) -l$(BASE_LIBRARY) -lliquid -lopenal -lfftw3f
+LDFLAGS_APPLICATION		= -L$(LIB_DIR) -l$(BASE_LIBRARY) -lopenal
 LDFLAGS_TEST			= -L$(LIB_DIR) -l$(BASE_LIBRARY) -lgtest
 
 # LD Debug Flags
 LDFLAGS_BASE_D			=
-LDFLAGS_APPLICATION_D	= -L$(LIB_DIR) -l$(BASE_LIBRARY_D) -lliquid -lopenal -lfftw3f
+LDFLAGS_APPLICATION_D	= -L$(LIB_DIR) -l$(BASE_LIBRARY_D) -lopenal
 LDFLAGS_TEST_D			= -L$(LIB_DIR) -l$(BASE_LIBRARY_D) -lgtest
 
 # OS-Specific Options

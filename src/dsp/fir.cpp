@@ -23,6 +23,12 @@ void fir::set_taps_complex(vector<complex<double>> const& taps)
     samples_.resize(taps_.size(), 0);
 }
 
+void fir::reset(void)
+{
+    samples_.clear();
+    samples_.resize(taps_.size(), 0);
+}
+
 void fir::push(double x)
 {
     samples_.erase(samples_.begin());

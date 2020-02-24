@@ -34,28 +34,28 @@ AudioFrontend::~AudioFrontend(void)
     alcCloseDevice(m_outputDevice);
 }
 
-void AudioFrontend::samplesToFloat(const int16_t* in, size_t in_size, float* out)
+void AudioFrontend::samplesToDouble(const int16_t* in, size_t in_size, double* out)
 {
     for (size_t i = 0; i < in_size; i++) {
-        out[i] = static_cast<float>(in[i]) / 32768.f;
+        out[i] = static_cast<double>(in[i]) / 32768.f;
     }
 }
 
-void AudioFrontend::samplesToComplex(const int16_t* in, size_t in_size, complex<float>* out)
+void AudioFrontend::samplesToComplex(const int16_t* in, size_t in_size, complex<double>* out)
 {
     for (size_t i = 0; i < in_size; i++) {
-        out[i] = complex<float>(static_cast<float>(in[i*2+0]) / 32768.f, static_cast<float>(in[i*2+1]) / 32768.f);
+        out[i] = complex<double>(static_cast<double>(in[i*2+0]) / 32768.f, static_cast<double>(in[i*2+1]) / 32768.f);
     }
 }
 
-void AudioFrontend::floatToSamples(const float* in, size_t in_size, int16_t* out)
+void AudioFrontend::doubleToSamples(const double* in, size_t in_size, int16_t* out)
 {
     for (size_t i = 0; i < in_size; i++) {
         out[i] = static_cast<int16_t>(round((in[i]) * 32768.f));
     }
 }
 
-void AudioFrontend::complexToSamples(const complex<float>* in, size_t in_size, int16_t* out)
+void AudioFrontend::complexToSamples(const complex<double>* in, size_t in_size, int16_t* out)
 {
     for (size_t i = 0; i < in_size; i++) {
         out[i*2+0] = static_cast<int16_t>(round((in[i].real()) * 32768.f));
@@ -63,7 +63,7 @@ void AudioFrontend::complexToSamples(const complex<float>* in, size_t in_size, i
     }
 }
 
-void AudioFrontend::transmit(const complex<float>* out, size_t out_size)
+void AudioFrontend::transmit(const complex<double>* out, size_t out_size)
 {
 	size_t sent = 0;
 
@@ -75,13 +75,13 @@ void AudioFrontend::transmit(const complex<float>* out, size_t out_size)
 	}
 }
 
-void AudioFrontend::transmit(const float* out, size_t out_size)
+void AudioFrontend::transmit(const double* out, size_t out_size)
 {
 	size_t sent = 0;
 
 	while (sent < out_size) {
         size_t toSend = min(out_size - sent, m_outBuffer.size());
-		this->floatToSamples(out + sent, toSend, m_outBuffer.data());
+		this->doubleToSamples(out + sent, toSend, m_outBuffer.data());
 		this->transmit(m_outBuffer.data(), toSend);
 		sent += toSend;
 	}
@@ -124,7 +124,7 @@ void AudioFrontend::transmit(const int16_t* out, size_t out_size)
 	}
 }
 
-size_t AudioFrontend::receive(complex<float>* in, size_t in_size)
+size_t AudioFrontend::receive(complex<double>* in, size_t in_size)
 {
     size_t toRetrieve = min(in_size, m_inBuffer.size() / 2);
 
@@ -134,12 +134,12 @@ size_t AudioFrontend::receive(complex<float>* in, size_t in_size)
 	return retrieved;
 }
 
-size_t AudioFrontend::receive(float* in, size_t in_size)
+size_t AudioFrontend::receive(double* in, size_t in_size)
 {
     size_t toRetrieve = min(in_size, m_inBuffer.size() / 2);
 
 	size_t retrieved = this->receive(m_inBuffer.data(), toRetrieve);
-    this->samplesToFloat(m_inBuffer.data(), retrieved, in);
+    this->samplesToDouble(m_inBuffer.data(), retrieved, in);
 
 	return retrieved;
 }

@@ -23,6 +23,11 @@ void fir::set_taps_complex(vector<complex<double>> const& taps)
     samples_.resize(taps_.size(), 0);
 }
 
+unsigned int fir::get_delay(void) const
+{
+    return taps_.size();
+}
+
 void fir::reset(void)
 {
     samples_.clear();

@@ -16,6 +16,8 @@ public:
     void set_factor(unsigned int factor);
     unsigned int get_factor(void) const;
 
+    unsigned int get_delay(void) const;
+
     void reset(void);
 
     vector<double> execute(vector<double> const& in);

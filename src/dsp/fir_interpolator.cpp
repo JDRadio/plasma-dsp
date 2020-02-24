@@ -23,6 +23,11 @@ unsigned int fir_interpolator::get_factor(void) const
     return factor_;
 }
 
+unsigned int fir_interpolator::get_delay(void) const
+{
+    return filter_.get_delay();
+}
+
 void fir_interpolator::reset(void)
 {
     filter_.reset();

@@ -12,13 +12,17 @@ public:
     nco(void);
     ~nco(void) = default;
 
-    double get_frequency(void) const;
-    void set_frequency(double frequency);
-    void adjust_frequency(double df);
+    double get_angular_frequency(void) const;       //!< [rad/s]
+    void set_angular_frequency(double frequency);   //!< [rad/s]
+    void adjust_angular_frequency(double dw);       //!< [rad/s]
 
-    double get_phase(void) const;
-    void set_phase(double phase);
-    void adjust_phase(double dp);
+    double get_frequency(void) const;               //!< [Hz]
+    void set_frequency(double frequency);           //!< [Hz]
+    void adjust_frequency(double df);               //!< [Hz]
+
+    double get_phase(void) const;   //!< [rad]
+    void set_phase(double phase);   //!< [rad]
+    void adjust_phase(double dp);   //!< [rad]
 
     void step(void);
     void reset(void);

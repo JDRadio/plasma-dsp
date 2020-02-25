@@ -10,24 +10,39 @@ nco::nco(void)
 {
 }
 
+double nco::get_angular_frequency(void) const
+{
+    return d_theta_;
+}
+
 double nco::get_frequency(void) const
 {
-    return d_theta_ / math::two_pi;
+    return d_theta_ / (2.0 * math::pi);
+}
+
+void nco::set_angular_frequency(double frequency)
+{
+    d_theta_ = frequency;
 }
 
 void nco::set_frequency(double frequency)
 {
-    d_theta_ = abs(math::two_pi * frequency);
+    d_theta_ = 2.0 * math::pi * frequency;
+}
+
+void nco::adjust_angular_frequency(double dw)
+{
+    d_theta_ += dw;
 }
 
 void nco::adjust_frequency(double df)
 {
-    d_theta_ = abs(d_theta_ + df);
+    d_theta_ += 2.0 * math::pi * df;
 }
 
 double nco::get_phase(void) const
 {
-    return theta_ / math::two_pi;
+    return theta_;
 }
 
 void nco::set_phase(double phase)

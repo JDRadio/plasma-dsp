@@ -2,6 +2,8 @@
 
 #include "plasma/dsp/squelch.hpp"
 #include "plasma/dsp/agc.hpp"
+#include "plasma/dsp/nco.hpp"
+#include "plasma/dsp/chirp.hpp"
 #include "plasma/dsp/fir.hpp"
 #include "plasma/dsp/math.hpp"
 #include "plasma/dsp/fir_designer.hpp"
@@ -15,7 +17,8 @@
 #include <vector>
 #include <complex>
 #include <cmath>
-
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -45,6 +48,26 @@ int main(int, char*[])
 
     dsp::fir_interpolator interpolator;
     interpolator.set_factor(2);
+
+    {
+        dsp::chirp chirp;
+        double sample_rate = 10000;
+        double freq_start = 2000;
+        double freq_end = 5000;
+        double sweep_time = 1.5;
+        chirp.set_parameters(sample_rate, freq_start, freq_end, sweep_time);
+
+        ofstream fp("sig.raw");
+
+        for (unsigned int i = 0; i < 100000; i++) {
+            auto val = chirp.execute_complex();
+            chirp.step();
+
+            fp << val.real() << " " << val.imag() << endl;
+        }
+    }
+
+    return 0;
 
     while (true) {
         audio->receive(buffer_in.data(), buffer_in.size());

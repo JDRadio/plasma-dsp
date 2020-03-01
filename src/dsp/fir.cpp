@@ -27,7 +27,7 @@ void fir::set_complex_taps(vector<complex<double>> const& taps)
 
 unsigned int fir::get_delay(void) const
 {
-    return taps_.size();
+    return taps_.size() / 2;
 }
 
 void fir::reset(void)

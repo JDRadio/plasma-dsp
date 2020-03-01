@@ -62,4 +62,36 @@ vector<double> fir_designer::create_kaiser(double fc, double df, double att)
     return taps;
 }
 
+vector<double> fir_designer::create_rrc(unsigned int k, unsigned int m, double r)
+{
+    unsigned int len = 2 * k * m + 1;
+    vector<double> h(len);
+
+    double s = sin(math::pi / (4 * r));
+    double c = cos(math::pi / (4 * r));
+
+    for (size_t n = 0; n < len; n++) {
+        double t = static_cast<double>(n) / static_cast<double>(k) - m;
+
+        if (abs(t) < 1e-6) {
+            // t = 0
+            h[n] = (1 - r) + 4 * r / math::pi;
+        }
+        else {
+            double p = 1 - (16 * r*r * t*t);
+
+            if (abs(p) < 1e-6) {
+                // t = +/- Tc/(4r)
+                h[n] = r / math::sqrt2 * ((1 + 2 / math::pi) * s + (1 - 2 / math::pi) * c);
+            }
+            else {
+                // t = otherwise
+                h[n] = (sin(math::pi * t * (1 - r)) + 4 * r * t * cos(math::pi * t * (1 + r))) / (math::pi * t * p);
+            }
+        }
+    }
+
+    return h;
+}
+
 } // namespace

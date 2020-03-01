@@ -49,21 +49,15 @@ int main(int, char*[])
     dsp::fir_interpolator interpolator;
     interpolator.set_factor(2);
 
+    dsp::fir rrc;
+    auto rrc_taps = dsp::fir_designer::create_rrc(2, 6, 0.6);
+    rrc.set_taps(rrc_taps);
+
     {
-        dsp::chirp chirp;
-        double sample_rate = 10000;
-        double freq_start = 2000;
-        double freq_end = 5000;
-        double sweep_time = 1.5;
-        chirp.set_parameters(sample_rate, freq_start, freq_end, sweep_time);
+        ofstream fp("plasma.raw");
 
-        ofstream fp("sig.raw");
-
-        for (unsigned int i = 0; i < 100000; i++) {
-            auto val = chirp.execute();
-            chirp.step();
-
-            fp << val.real() << " " << val.imag() << endl;
+        for (auto val : rrc_taps) {
+            fp << val << endl;
         }
     }
 

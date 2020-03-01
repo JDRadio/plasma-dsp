@@ -2,6 +2,7 @@
 
 #include "nco.hpp"
 #include <complex>
+#include <vector>
 
 using namespace std;
 
@@ -12,15 +13,19 @@ class chirp
 public:
     chirp(void);
     ~chirp(void) = default;
-
-    double execute(void);
-    complex<double> execute_complex(void);
-
+    
     void step(void);
+
+    /// Generates a chirp sample
+    complex<double> execute(void);
+
+    /// Generates multiple chirp samples
+    vector<complex<double>> execute(size_t count);
 
     void set_parameters(double sample_rate, double start, double end, double time);
 
 private:
+
     double sample_rate_;
     double freq_start_;
     double freq_end_;

@@ -114,34 +114,14 @@ void agc::internal_execute(double energy)
     this->clamp_gain();
 }
 
-double agc::execute(double x)
-{
-    double y = x * gain_;
-    this->internal_execute(y * y);
-    return y * scale_;
-}
-
-vector<double> agc::execute(vector<double> const& in)
-{
-    vector<double> out = in;
-
-    for (auto& y : out) {
-        y *= gain_;
-        this->internal_execute(y * y);
-        y *= scale_;
-    }
-
-    return out;
-}
-
-complex<double> agc::execute_complex(complex<double> x)
+complex<double> agc::execute(complex<double> x)
 {
     complex<double> y = x * gain_;
     this->internal_execute(abs(y) * abs(y));
     return y * scale_;
 }
 
-vector<complex<double>> agc::execute_complex(vector<complex<double>> const& in)
+vector<complex<double>> agc::execute(vector<complex<double>> const& in)
 {
     vector<complex<double>> out = in;
 

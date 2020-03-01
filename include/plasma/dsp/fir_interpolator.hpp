@@ -20,8 +20,7 @@ public:
 
     void reset(void);
 
-    vector<double> execute(vector<double> const& in);
-    vector<complex<double>> execute_complex(vector<complex<double>> const& in);
+    vector<complex<double>> execute(vector<complex<double>> const& in);
 
 private:
     unsigned int factor_;

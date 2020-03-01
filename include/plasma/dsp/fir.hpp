@@ -13,17 +13,16 @@ public:
     ~fir(void) = default;
 
     void set_taps(vector<double> const& taps);
-    void set_taps_complex(vector<complex<double>> const& taps);
+    void set_complex_taps(vector<complex<double>> const& taps);
 
     unsigned int get_delay(void) const;
 
     void reset(void);
 
-    void push(double x);
-    double execute(void);
+    void push(complex<double> x);
+    complex<double> execute(void);
 
-    void push_complex(complex<double> x);
-    complex<double> execute_complex(void);
+    vector<complex<double>> execute(vector<complex<double>> const& in);
 
 private:
     vector<complex<double>> taps_;

@@ -27,11 +27,10 @@ public:
     void step(void);
     void reset(void);
 
-    double mix_up(double x);
-    double mix_down(double x);
-
-    complex<double> mix_up_complex(complex<double> x);
-    complex<double> mix_down_complex(complex<double> x);
+    complex<double> mix_up(complex<double> x);
+    vector<complex<double>> mix_up(vector<complex<double>> const& in);
+    complex<double> mix_down(complex<double> x);
+    vector<complex<double>> mix_down(vector<complex<double>> const& in);
 
 private:
     double theta_;

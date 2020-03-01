@@ -12,24 +12,32 @@ chirp::chirp(void)
 {
 }
 
-double chirp::execute(void)
+complex<double> chirp::execute(void)
 {
-    return real(this->execute_complex());
+    return nco_.mix_up(complex<double>(1, 0));
 }
 
-complex<double> chirp::execute_complex(void)
+vector<complex<double>> chirp::execute(size_t count)
 {
-    return nco_.mix_up_complex(complex<double>(1, 0));
+    vector<complex<double>> out(count);
+
+    for (size_t i = 0; i < count; i++) {
+        out[i] = this->execute();
+        this->step();
+    }
+
+    return out;
 }
 
 void chirp::step(void)
 {
-    nco_.step();
     nco_.adjust_frequency(freq_adjust_);
 
     if (nco_.get_frequency() >= freq_end_) {
         nco_.set_frequency(freq_start_);
     }
+
+    nco_.step();
 }
 
 void chirp::set_parameters(double sample_rate, double start, double end, double time)

@@ -65,24 +65,38 @@ void nco::reset(void)
     theta_ = 0;
 }
 
-double nco::mix_up(double x)
-{
-    return real(x * exp(complex<double>(0, theta_)));
-}
-
-double nco::mix_down(double x)
-{
-    return real(x * exp(complex<double>(0, -theta_)));
-}
-
-complex<double> nco::mix_up_complex(complex<double> x)
+complex<double> nco::mix_up(complex<double> x)
 {
     return x * exp(complex<double>(0, theta_));
 }
 
-complex<double> nco::mix_down_complex(complex<double> x)
+complex<double> nco::mix_down(complex<double> x)
 {
     return x * exp(complex<double>(0, -theta_));
+}
+
+vector<complex<double>> nco::mix_up(vector<complex<double>> const& in)
+{
+    vector<complex<double>> out(in.size());
+
+    for (size_t i = 0; i < in.size(); i++) {
+        out[i] = this->mix_up(in[i]);
+        this->step();
+    }
+
+    return out;
+}
+
+vector<complex<double>> nco::mix_down(vector<complex<double>> const& in)
+{
+    vector<complex<double>> out(in.size());
+
+    for (size_t i = 0; i < in.size(); i++) {
+        out[i] = this->mix_down(in[i]);
+        this->step();
+    }
+
+    return out;
 }
 
 } // namespace

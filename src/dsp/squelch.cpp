@@ -114,33 +114,17 @@ squelch::status squelch::internal_execute(double energy)
     return status_;
 }
 
-squelch::status squelch::execute(double x)
-{
-    return this->internal_execute(x * x);
-}
-
-vector<squelch::status> squelch::execute(vector<double> const& in)
-{
-    vector<status> out(in.size());
-
-    for (size_t i = 0; i < in.size(); i++) {
-        out[i] = this->internal_execute(in[i] * in[i]);
-    }
-
-    return out;
-}
-
-squelch::status squelch::execute_complex(complex<double> x)
+squelch::status squelch::execute(complex<double> x)
 {
     return this->internal_execute(abs(x) * abs(x));
 }
 
-vector<squelch::status> squelch::execute_complex(vector<complex<double>> const& in)
+vector<squelch::status> squelch::execute(vector<complex<double>> const& in)
 {
     vector<status> out(in.size());
 
     for (size_t i = 0; i < in.size(); i++) {
-        out[i] = this->internal_execute(abs(in[i]) * abs(in[i]));
+        out[i] = this->execute(in[i]);
     }
 
     return out;

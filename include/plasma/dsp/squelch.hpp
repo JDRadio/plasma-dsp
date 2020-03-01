@@ -38,11 +38,8 @@ public:
     void unlock(void);
     bool locked(void) const;
 
-    status execute(double x);
-    vector<status> execute(vector<double> const& in);
-
-    status execute_complex(complex<double> x);
-    vector<status> execute_complex(vector<complex<double>> const& in);
+    status execute(complex<double> x);
+    vector<status> execute(vector<complex<double>> const& in);
 
 private:
     status internal_execute(double energy);

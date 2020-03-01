@@ -28,28 +28,7 @@ void fir_decimator::reset(void)
     filter_.reset();
 }
 
-vector<double> fir_decimator::execute(vector<double> const& in)
-{
-    if (factor_ == 1) {
-        return in;
-    }
-
-    vector<double> out;
-    out.reserve(in.size() / factor_ + 2);
-
-    for (size_t i = 0; i < in.size(); i++) {
-        filter_.push(in[i]);
-
-        if (samples_++ % factor_ == 0) {
-            out.push_back(filter_.execute());
-            samples_ %= factor_;
-        }
-    }
-
-    return out;
-}
-
-vector<complex<double>> fir_decimator::execute_complex(vector<complex<double>> const& in)
+vector<complex<double>> fir_decimator::execute(vector<complex<double>> const& in)
 {
     if (factor_ == 1) {
         return in;
@@ -59,10 +38,10 @@ vector<complex<double>> fir_decimator::execute_complex(vector<complex<double>> c
     out.reserve(in.size() / factor_ + 2);
 
     for (size_t i = 0; i < in.size(); i++) {
-        filter_.push_complex(in[i]);
+        filter_.push(in[i]);
 
         if (samples_++ % factor_ == 0) {
-            out.push_back(filter_.execute_complex());
+            out.push_back(filter_.execute());
             samples_ %= factor_;
         }
     }

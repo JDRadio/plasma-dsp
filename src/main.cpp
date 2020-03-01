@@ -60,7 +60,7 @@ int main(int, char*[])
         ofstream fp("sig.raw");
 
         for (unsigned int i = 0; i < 100000; i++) {
-            auto val = chirp.execute_complex();
+            auto val = chirp.execute();
             chirp.step();
 
             fp << val.real() << " " << val.imag() << endl;
@@ -73,12 +73,12 @@ int main(int, char*[])
         audio->receive(buffer_in.data(), buffer_in.size());
 
         // 48 kHz
-        auto buffer_down = decimator.execute_complex(vector<complex<double>>(buffer_in.data(), buffer_in.data() + buffer_in.size()));
+        auto buffer_down = decimator.execute(vector<complex<double>>(buffer_in.data(), buffer_in.data() + buffer_in.size()));
         // 12 kHz
 
         for (auto& n : buffer_down) {
-            dsp::squelch::status sq = squelch.execute_complex(n);
-            n = agc.execute_complex(n);
+            dsp::squelch::status sq = squelch.execute(n);
+            n = agc.execute(n);
 
             if (sq == dsp::squelch::status::on) {
                 agc.lock();
@@ -90,7 +90,7 @@ int main(int, char*[])
         }
 
         // 12 kHz
-        auto buffer_up = interpolator.execute_complex(buffer_down);
+        auto buffer_up = interpolator.execute(buffer_down);
         // 48 kHz
 
         audio->transmit(buffer_up.data(), buffer_up.size());

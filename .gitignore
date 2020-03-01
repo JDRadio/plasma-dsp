@@ -9,3 +9,5 @@ lib/
 *.pdf
 *.synctex.gz
 *.synctex(busy)
+*.m
+*.raw

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace dsp {
+namespace plasma::dsp {
 
 class qpsk {
 public:

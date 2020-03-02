@@ -1,6 +1,6 @@
-#include "plasma/dsp/fir_interpolator.hpp"
+#include "plasma/audio/fir_interpolator.hpp"
 
-namespace plasma::dsp {
+namespace plasma::audio {
 
 fir_interpolator::fir_interpolator(void)
     : factor_(1)
@@ -36,13 +36,13 @@ void fir_interpolator::reset(void)
     filter_.reset();
 }
 
-vector<complex<double>> fir_interpolator::execute(vector<complex<double>> const& in)
+vector<double> fir_interpolator::execute(vector<double> const& in)
 {
     if (factor_ == 1) {
         return in;
     }
 
-    vector<complex<double>> out;
+    vector<double> out;
     out.reserve(in.size() * factor_);
 
     for (size_t i = 0; i < in.size(); i++) {

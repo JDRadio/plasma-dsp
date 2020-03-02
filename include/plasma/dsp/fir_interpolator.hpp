@@ -1,12 +1,12 @@
 #pragma once
 
-#include "plasma/dsp/fir.hpp"
+#include "fir.hpp"
 #include <vector>
 #include <complex>
 
 using namespace std;
 
-namespace dsp {
+namespace plasma::dsp {
 
 class fir_interpolator {
 public:

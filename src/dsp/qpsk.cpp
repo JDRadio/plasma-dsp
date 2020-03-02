@@ -1,9 +1,9 @@
 #include "plasma/dsp/qpsk.hpp"
-#include "plasma/dsp/math.hpp"
+#include "plasma/math.hpp"
 #include <cmath>
 #include<iostream>
 
-namespace dsp {
+namespace plasma::dsp {
 
 vector<complex<double>> qpsk::modulate(string const& in)
 {

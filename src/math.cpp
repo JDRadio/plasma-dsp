@@ -1,6 +1,6 @@
-#include "plasma/dsp/math.hpp"
+#include "plasma/math.hpp"
 
-namespace dsp {
+namespace plasma {
 
 // normalized sinc: sin(\pi x) / (\pi x)
 double math::sinc(double x)

@@ -1,6 +1,6 @@
 #include "plasma/dsp/chirp.hpp"
 
-namespace dsp {
+namespace plasma::dsp {
 
 chirp::chirp(void)
     : sample_rate_(0)

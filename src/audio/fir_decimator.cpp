@@ -1,6 +1,6 @@
-#include "plasma/dsp/fir_decimator.hpp"
+#include "plasma/audio/fir_decimator.hpp"
 
-namespace plasma::dsp {
+namespace plasma::audio {
 
 fir_decimator::fir_decimator(void)
     : factor_(1)
@@ -31,13 +31,13 @@ void fir_decimator::reset(void)
     filter_.reset();
 }
 
-vector<complex<double>> fir_decimator::execute(vector<complex<double>> const& in)
+vector<double> fir_decimator::execute(vector<double> const& in)
 {
     if (factor_ == 1) {
         return in;
     }
 
-    vector<complex<double>> out;
+    vector<double> out;
     out.reserve(in.size() / factor_ + 2);
 
     for (size_t i = 0; i < in.size(); i++) {

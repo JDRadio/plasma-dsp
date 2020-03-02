@@ -5,7 +5,7 @@
 #include "plasma/dsp/nco.hpp"
 #include "plasma/dsp/chirp.hpp"
 #include "plasma/dsp/fir.hpp"
-#include "plasma/dsp/math.hpp"
+#include "plasma/math.hpp"
 #include "plasma/dsp/qpsk.hpp"
 #include "plasma/dsp/fir_designer.hpp"
 #include "plasma/dsp/fir_decimator.hpp"
@@ -45,11 +45,11 @@ int main(int, char*[])
 
     array<complex<double>, 2048> buffer_in;
 
-    dsp::agc agc;
+    plasma::dsp::agc agc;
     agc.set_scale(0.03);
     agc.set_bandwidth(0.003);
 
-    dsp::squelch squelch;
+    plasma::dsp::squelch squelch;
     squelch.set_bandwidth(0.1);
     squelch.set_threshold(-50);
     squelch.set_timeout(240);
@@ -57,16 +57,16 @@ int main(int, char*[])
     double fc = 0.2;
     double df = 0.01;
     double att = 80;
-    dsp::fir fir = dsp::fir_designer::create_kaiser_filter(fc, df, att);
+    plasma::dsp::fir fir = plasma::dsp::fir_designer::create_kaiser_filter(fc, df, att);
 
-    dsp::fir_decimator decimator = dsp::fir_designer::create_kaiser_decimator(2, 0.05, 60);
+    plasma::dsp::fir_decimator decimator = plasma::dsp::fir_designer::create_kaiser_decimator(2, 0.05, 60);
 
-    dsp::fir_interpolator interpolator = dsp::fir_designer::create_kaiser_interpolator(2, 0.05, 60);
+    plasma::dsp::fir_interpolator interpolator = plasma::dsp::fir_designer::create_kaiser_interpolator(2, 0.05, 60);
 
-    dsp::fir_interpolator rrc_tx = dsp::fir_designer::create_rrc_interpolator(2, 6, 0.6);
-    dsp::fir_decimator rrc_rx = dsp::fir_designer::create_rrc_decimator(2, 6, 0.6);
+    plasma::dsp::fir_interpolator rrc_tx = plasma::dsp::fir_designer::create_rrc_interpolator(2, 6, 0.6);
+    plasma::dsp::fir_decimator rrc_rx = plasma::dsp::fir_designer::create_rrc_decimator(2, 6, 0.6);
 
-    dsp::qpsk qpsk;
+    plasma::dsp::qpsk qpsk;
 
     {
         string message_tx = "Hello, World! Hello, World!"s;

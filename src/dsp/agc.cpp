@@ -1,7 +1,7 @@
 #include "plasma/dsp/agc.hpp"
 #include <cmath>
 
-namespace dsp {
+namespace plasma::dsp {
 
 agc::agc(void)
     : max_gain_(1e6)

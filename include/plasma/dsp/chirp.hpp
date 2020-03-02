@@ -6,14 +6,14 @@
 
 using namespace std;
 
-namespace dsp {
+namespace plasma::dsp {
 
 class chirp
 {
 public:
     chirp(void);
     ~chirp(void) = default;
-    
+
     void step(void);
 
     /// Generates a chirp sample

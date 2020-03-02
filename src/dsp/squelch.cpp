@@ -1,7 +1,7 @@
 #include "plasma/dsp/squelch.hpp"
 #include <cmath>
 
-namespace dsp {
+namespace plasma::dsp {
 
 squelch::squelch(void)
     : alpha_(0.1)

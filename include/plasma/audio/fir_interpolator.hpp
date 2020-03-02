@@ -2,29 +2,30 @@
 
 #include "fir.hpp"
 #include <vector>
-#include <complex>
 
 using namespace std;
 
-namespace plasma::dsp {
+namespace plasma::audio {
 
-class fir_decimator {
+class fir_interpolator {
 public:
-    fir_decimator(void);
-    ~fir_decimator(void) = default;
+    fir_interpolator(void);
+    ~fir_interpolator(void) = default;
 
     void set_taps(vector<double> const& taps);
 
     void set_factor(unsigned int factor);
     unsigned int get_factor(void) const;
 
+    unsigned int get_delay(void) const;
+
     void reset(void);
 
-    vector<complex<double>> execute(vector<complex<double>> const& in);
+    vector<double> execute(vector<double> const& in);
 
 private:
     unsigned int factor_;
-    unsigned int samples_;
+    double scale_;
     fir filter_;
 };
 

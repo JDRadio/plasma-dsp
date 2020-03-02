@@ -1,8 +1,8 @@
 #include "plasma/dsp/fir_designer.hpp"
-#include "plasma/dsp/math.hpp"
+#include "plasma/math.hpp"
 #include <cmath>
 
-namespace dsp {
+namespace plasma::dsp {
 
 unsigned int fir_designer::kaiser_order(double att, double df)
 {

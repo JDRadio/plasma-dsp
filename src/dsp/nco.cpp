@@ -1,8 +1,8 @@
 #include "plasma/dsp/nco.hpp"
-#include "plasma/dsp/math.hpp"
+#include "plasma/math.hpp"
 #include <cmath>
 
-namespace dsp {
+namespace plasma::dsp {
 
 nco::nco(void)
     : theta_(0)

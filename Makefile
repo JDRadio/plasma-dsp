@@ -37,9 +37,9 @@ TEST_PROJECTS_D			= $(addsuffix _d,$(TEST_PROJECTS))
 BASE_LIBRARY_D			= $(addsuffix _d,$(BASE_LIBRARY))
 
 # Source Files
-APPLICATION_SRC	= $(wildcard $(SRC_DIR)/*.cpp)
+APPLICATION_SRC	= $(wildcard $(SRC_DIR)/app/*.cpp)
 TEST_SRC		= $(wildcard $(SRC_DIR)/test/*.cpp)
-BASE_SRC		= $(wildcard $(SRC_DIR)/dsp/*.cpp)
+BASE_SRC		= $(wildcard $(SRC_DIR)/dsp/*.cpp $(SRC_DIR)/audio/*.cpp $(SRC_DIR)/*.cpp)
 
 # Object Files
 APPLICATION_OBJ	= $(patsubst %.cpp,%.o,$(APPLICATION_SRC:$(SRC_DIR)/%=$(OBJ_DIR)/%))
@@ -171,7 +171,7 @@ $(LIB_DIR)/$(BASE_LIBRARY_BIN_D): $(BASE_OBJ_D)
 $(APPLICATION_PROJECTS): LDFLAGS = $(LDFLAGS_APPLICATION)
 $(APPLICATION_PROJECTS): CXXFLAGS = $(CXXFLAGS_APPLICATION)
 $(APPLICATION_PROJECTS): _build_dirs $(BASE_LIBRARY) _start_$$@ $(BIN_DIR)/$$(@) _finish_$$@
-$(addprefix $(BIN_DIR)/,$(APPLICATION_PROJECTS)): $(APPLICATION_OBJ) $(OBJ_DIR)/$$(@F).o
+$(addprefix $(BIN_DIR)/,$(APPLICATION_PROJECTS)): $(APPLICATION_OBJ) $(OBJ_DIR)/app/$$(@F).o
 	@$(call ECHO, 5, "Building executable $@")
 	$(CXX) -o $@ $^ $(LDFLAGS)
 

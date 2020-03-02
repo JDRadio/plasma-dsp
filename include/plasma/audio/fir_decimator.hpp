@@ -2,11 +2,10 @@
 
 #include "fir.hpp"
 #include <vector>
-#include <complex>
 
 using namespace std;
 
-namespace plasma::dsp {
+namespace plasma::audio {
 
 class fir_decimator {
 public:
@@ -20,7 +19,7 @@ public:
 
     void reset(void);
 
-    vector<complex<double>> execute(vector<complex<double>> const& in);
+    vector<double> execute(vector<double> const& in);
 
 private:
     unsigned int factor_;

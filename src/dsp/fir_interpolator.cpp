@@ -10,12 +10,16 @@ fir_interpolator::fir_interpolator(void)
 {
 }
 
+void fir_interpolator::set_taps(vector<double> const& taps)
+{
+    filter_.set_taps(taps);
+}
+
 void fir_interpolator::set_factor(unsigned int factor)
 {
     factor_ = factor;
 
     scale_ = factor_;
-    filter_.set_taps(fir_designer::create_kaiser(0.5 / factor_ - 0.025, 0.05, 60.0));
 }
 
 unsigned int fir_interpolator::get_factor(void) const

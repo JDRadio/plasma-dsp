@@ -13,6 +13,8 @@ public:
     fir_decimator(void);
     ~fir_decimator(void) = default;
 
+    void set_taps(vector<double> const& taps);
+
     void set_factor(unsigned int factor);
     unsigned int get_factor(void) const;
 

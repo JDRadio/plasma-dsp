@@ -13,6 +13,8 @@ public:
     fir_interpolator(void);
     ~fir_interpolator(void) = default;
 
+    void set_taps(vector<double> const& taps);
+
     void set_factor(unsigned int factor);
     unsigned int get_factor(void) const;
 

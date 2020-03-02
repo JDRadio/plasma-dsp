@@ -10,11 +10,15 @@ fir_decimator::fir_decimator(void)
 {
 }
 
+void fir_decimator::set_taps(vector<double> const& taps)
+{
+    filter_.set_taps(taps);
+}
+
 void fir_decimator::set_factor(unsigned int factor)
 {
     factor_ = factor;
     samples_ = 0;
-    filter_.set_taps(fir_designer::create_kaiser(0.5 / factor_ - 0.025, 0.05, 60.0));
 }
 
 unsigned int fir_decimator::get_factor(void) const

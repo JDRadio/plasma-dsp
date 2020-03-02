@@ -6,6 +6,7 @@
 #include "plasma/dsp/chirp.hpp"
 #include "plasma/dsp/fir.hpp"
 #include "plasma/dsp/math.hpp"
+#include "plasma/dsp/qpsk.hpp"
 #include "plasma/dsp/fir_designer.hpp"
 #include "plasma/dsp/fir_decimator.hpp"
 #include "plasma/dsp/fir_interpolator.hpp"
@@ -22,6 +23,22 @@
 
 using namespace std;
 
+void print_to_file(string const& file, vector<complex<double>> const& in)
+{
+    ofstream fp(file);
+    for (auto val : in) {
+        fp << val.real() << " " << val.imag() << endl;
+    }
+}
+
+void print_to_file(string const& file, vector<double> const& in)
+{
+    ofstream fp(file);
+    for (auto val : in) {
+        fp << val << endl;
+    }
+}
+
 int main(int, char*[])
 {
     AudioFrontend::sptr audio = AudioFrontend::make();
@@ -37,57 +54,35 @@ int main(int, char*[])
     squelch.set_threshold(-50);
     squelch.set_timeout(240);
 
-    dsp::fir fir;
     double fc = 0.2;
     double df = 0.01;
     double att = 80;
-    fir.set_taps(dsp::fir_designer::create_kaiser(fc, df, att));
+    dsp::fir fir = dsp::fir_designer::create_kaiser_filter(fc, df, att);
 
-    dsp::fir_decimator decimator;
-    decimator.set_factor(2);
+    dsp::fir_decimator decimator = dsp::fir_designer::create_kaiser_decimator(2, 0.05, 60);
 
-    dsp::fir_interpolator interpolator;
-    interpolator.set_factor(2);
+    dsp::fir_interpolator interpolator = dsp::fir_designer::create_kaiser_interpolator(2, 0.05, 60);
 
-    dsp::fir rrc;
-    auto rrc_taps = dsp::fir_designer::create_rrc(2, 6, 0.6);
-    rrc.set_taps(rrc_taps);
+    dsp::fir_interpolator rrc_tx = dsp::fir_designer::create_rrc_interpolator(2, 6, 0.6);
+    dsp::fir_decimator rrc_rx = dsp::fir_designer::create_rrc_decimator(2, 6, 0.6);
+
+    dsp::qpsk qpsk;
 
     {
-        ofstream fp("plasma.raw");
+        string message_tx = "Hello, World! Hello, World!"s;
 
-        for (auto val : rrc_taps) {
-            fp << val << endl;
-        }
-    }
+        vector<complex<double>> sig_tx_mod = qpsk.modulate(message_tx);
+        vector<complex<double>> sig_tx_rrc = rrc_tx.execute(sig_tx_mod);
+        vector<complex<double>> sig_tx_interp = interpolator.execute(sig_tx_rrc);
+        vector<complex<double>> sig_rx_decim = decimator.execute(sig_tx_interp);
+        vector<complex<double>> sig_rx_rrc = rrc_rx.execute(sig_rx_decim);
+        string message_rx = qpsk.demodulate(sig_rx_rrc);
 
-    return 0;
-
-    while (true) {
-        audio->receive(buffer_in.data(), buffer_in.size());
-
-        // 48 kHz
-        auto buffer_down = decimator.execute(vector<complex<double>>(buffer_in.data(), buffer_in.data() + buffer_in.size()));
-        // 12 kHz
-
-        for (auto& n : buffer_down) {
-            dsp::squelch::status sq = squelch.execute(n);
-            n = agc.execute(n);
-
-            if (sq == dsp::squelch::status::on) {
-                agc.lock();
-                n = 0;
-            }
-            else if (sq == dsp::squelch::status::off) {
-                agc.unlock();
-            }
-        }
-
-        // 12 kHz
-        auto buffer_up = interpolator.execute(buffer_down);
-        // 48 kHz
-
-        audio->transmit(buffer_up.data(), buffer_up.size());
+        // print_to_file("sig_tx_mod.raw", sig_tx_mod);
+        // print_to_file("sig_tx_rrc.raw", sig_tx_rrc);
+        // print_to_file("sig_tx_interp.raw", sig_tx_interp);
+        // print_to_file("sig_rx_decim.raw", sig_rx_decim);
+        // print_to_file("sig_rx_rrc.raw", sig_rx_rrc);
     }
 
     return 0;

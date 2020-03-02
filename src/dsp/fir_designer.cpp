@@ -47,7 +47,7 @@ double fir_designer::kaiser_window(double beta, int n, int big_n)
     return a / b;
 }
 
-vector<double> fir_designer::create_kaiser(double fc, double df, double att)
+vector<double> fir_designer::create_kaiser_taps(double fc, double df, double att)
 {
     double beta = kaiser_beta(att);
     unsigned int len = kaiser_order(att, df);
@@ -62,7 +62,30 @@ vector<double> fir_designer::create_kaiser(double fc, double df, double att)
     return taps;
 }
 
-vector<double> fir_designer::create_rrc(unsigned int k, unsigned int m, double r)
+fir fir_designer::create_kaiser_filter(double fc, double df, double att)
+{
+    fir filter;
+    filter.set_taps(create_kaiser_taps(fc, df, att));
+    return filter;
+}
+
+fir_interpolator fir_designer::create_kaiser_interpolator(unsigned int k, double df, double att)
+{
+    fir_interpolator filter;
+    filter.set_factor(k);
+    filter.set_taps(create_kaiser_taps(0.5 / k, df, att));
+    return filter;
+}
+
+fir_decimator fir_designer::create_kaiser_decimator(unsigned int k, double df, double att)
+{
+    fir_decimator filter;
+    filter.set_factor(k);
+    filter.set_taps(create_kaiser_taps(0.5 / k, df, att));
+    return filter;
+}
+
+vector<double> fir_designer::create_rrc_taps(unsigned int k, unsigned int m, double r)
 {
     unsigned int len = 2 * k * m + 1;
     vector<double> h(len);
@@ -92,6 +115,22 @@ vector<double> fir_designer::create_rrc(unsigned int k, unsigned int m, double r
     }
 
     return h;
+}
+
+fir_interpolator fir_designer::create_rrc_interpolator(unsigned int k, unsigned int m, double r)
+{
+    fir_interpolator filter;
+    filter.set_factor(k);
+    filter.set_taps(create_rrc_taps(k, m, r));
+    return filter;
+}
+
+fir_decimator fir_designer::create_rrc_decimator(unsigned int k, unsigned int m, double r)
+{
+    fir_decimator filter;
+    filter.set_factor(k);
+    filter.set_taps(create_rrc_taps(k, m, r));
+    return filter;
 }
 
 } // namespace

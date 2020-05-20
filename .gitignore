@@ -11,3 +11,4 @@ lib/
 *.synctex(busy)
 *.m
 *.raw
+build/

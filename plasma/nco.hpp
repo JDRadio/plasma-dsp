@@ -8,10 +8,10 @@
 #ifndef PLASMA_NCO_HPP
 #define PLASMA_NCO_HPP
 
+#include "math.hpp"
 #include <complex>
 #include <vector>
 #include <cmath>
-#include "math.hpp"
 
 namespace plasma {
 

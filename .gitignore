@@ -1,6 +1,4 @@
-bin/
-obj/
-lib/
+build/
 *.swp
 *.aux
 *.fdb_latexmk
@@ -11,4 +9,3 @@ lib/
 *.synctex(busy)
 *.m
 *.raw
-build/

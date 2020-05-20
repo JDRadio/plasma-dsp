@@ -3,6 +3,8 @@
 #include "plasma/qpsk.hpp"
 #include "plasma/nco.hpp"
 #include "plasma/fir.hpp"
+#include "plasma/fir_decimator.hpp"
+#include "plasma/fir_interpolator.hpp"
 
 #include <vector>
 #include <string>
@@ -11,6 +13,8 @@
 int main(int argc, char** argv)
 {
     plasma::fir_cff fir;
+    plasma::fir_decimator_cff fir_decimator;
+    plasma::fir_interpolator_cff fir_interpolator;
 
     plasma::agc_cf agc;
     agc.set_scale(0.03);

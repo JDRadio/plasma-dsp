@@ -2,6 +2,7 @@
 #include "plasma/squelch.hpp"
 #include "plasma/qpsk.hpp"
 #include "plasma/nco.hpp"
+#include "plasma/fir.hpp"
 
 #include <vector>
 #include <string>
@@ -9,6 +10,8 @@
 
 int main(int argc, char** argv)
 {
+    plasma::fir_cff fir;
+
     plasma::agc_cf agc;
     agc.set_scale(0.03);
     agc.set_bandwidth(0.003);

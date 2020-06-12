@@ -5,8 +5,8 @@
 //! \date 2020
 //! \copyright AmateurRadio.Engineer
 ////////////////////////////////////////////////////////////////////////////////
-template <typename T>
-SQUELCH<T>::SQUELCH(void)
+template <typename T, typename TC>
+SQUELCH<T,TC>::SQUELCH(void)
     : alpha_(0.1)
     , energy_(0.)
     , locked_(false)
@@ -17,92 +17,92 @@ SQUELCH<T>::SQUELCH(void)
 {
 }
 
-template <typename T>
-void SQUELCH<T>::set_status(status s)
+template <typename T, typename TC>
+void SQUELCH<T,TC>::set_status(status s)
 {
     status_ = s;
 }
 
-template <typename T>
-typename SQUELCH<T>::status SQUELCH<T>::get_status(void) const
+template <typename T, typename TC>
+typename SQUELCH<T,TC>::status SQUELCH<T,TC>::get_status(void) const
 {
     return status_;
 }
 
-template <typename T>
-bool SQUELCH<T>::squelched(void) const
+template <typename T, typename TC>
+bool SQUELCH<T,TC>::squelched(void) const
 {
     return status_ == status::on;
 }
 
-template <typename T>
-double SQUELCH<T>::get_threshold(void) const
+template <typename T, typename TC>
+T SQUELCH<T,TC>::get_threshold(void) const
 {
     return threshold_;
 }
 
-template <typename T>
-void SQUELCH<T>::set_threshold(double threshold)
+template <typename T, typename TC>
+void SQUELCH<T,TC>::set_threshold(T threshold)
 {
     threshold_ = threshold;
 }
 
-template <typename T>
-unsigned int SQUELCH<T>::get_timeout(void) const
+template <typename T, typename TC>
+unsigned int SQUELCH<T,TC>::get_timeout(void) const
 {
     return timeout_;
 }
 
-template <typename T>
-void SQUELCH<T>::set_timeout(unsigned int timeout)
+template <typename T, typename TC>
+void SQUELCH<T,TC>::set_timeout(unsigned int timeout)
 {
     timeout_ = timeout;
 }
 
-template <typename T>
-double SQUELCH<T>::get_bandwidth(void) const
+template <typename T, typename TC>
+T SQUELCH<T,TC>::get_bandwidth(void) const
 {
     return alpha_;
 }
 
-template <typename T>
-void SQUELCH<T>::set_bandwidth(double bandwidth)
+template <typename T, typename TC>
+void SQUELCH<T,TC>::set_bandwidth(T bandwidth)
 {
     alpha_ = bandwidth;
 }
 
-template <typename T>
-double SQUELCH<T>::get_rssi(void) const
+template <typename T, typename TC>
+T SQUELCH<T,TC>::get_rssi(void) const
 {
     return 10. * std::log10(energy_);
 }
 
-template <typename T>
-void SQUELCH<T>::set_rssi(double rssi)
+template <typename T, typename TC>
+void SQUELCH<T,TC>::set_rssi(T rssi)
 {
     energy_ = std::pow(10., rssi / 10.);
 }
 
-template <typename T>
-void SQUELCH<T>::lock(void)
+template <typename T, typename TC>
+void SQUELCH<T,TC>::lock(void)
 {
     locked_ = true;
 }
 
-template <typename T>
-void SQUELCH<T>::unlock(void)
+template <typename T, typename TC>
+void SQUELCH<T,TC>::unlock(void)
 {
     locked_ = false;
 }
 
-template <typename T>
-bool SQUELCH<T>::locked(void) const
+template <typename T, typename TC>
+bool SQUELCH<T,TC>::locked(void) const
 {
     return locked_;
 }
 
-template <typename T>
-typename SQUELCH<T>::status SQUELCH<T>::internal_execute(double energy)
+template <typename T, typename TC>
+typename SQUELCH<T,TC>::status SQUELCH<T,TC>::internal_execute(T energy)
 {
     energy_ = (1. - alpha_) * energy_ + alpha_ * energy;
 
@@ -132,14 +132,14 @@ typename SQUELCH<T>::status SQUELCH<T>::internal_execute(double energy)
     return status_;
 }
 
-template <typename T>
-typename SQUELCH<T>::status SQUELCH<T>::execute(T x)
+template <typename T, typename TC>
+typename SQUELCH<T,TC>::status SQUELCH<T,TC>::execute(TC x)
 {
-    return internal_execute(x * std::conj(x));
+    return internal_execute(std::abs(x * std::conj(x)));
 }
 
-template <typename T>
-std::vector<typename SQUELCH<T>::status> SQUELCH<T>::execute(std::vector<T> const& in)
+template <typename T, typename TC>
+std::vector<typename SQUELCH<T,TC>::status> SQUELCH<T,TC>::execute(std::vector<TC> const& in)
 {
     std::vector<status> out(in.size());
 

@@ -14,58 +14,58 @@
 
 namespace plasma {
 
-template <typename T>
+template <typename T, typename TC>
 class AGC {
 public:
     AGC(void);
     ~AGC(void) = default;
 
-    double get_max_gain(void) const;
-    void set_max_gain(double max_gain);
+    T get_max_gain(void) const;
+    void set_max_gain(T max_gain);
 
-    double get_min_gain(void) const;
-    void set_min_gain(double min_gain);
+    T get_min_gain(void) const;
+    void set_min_gain(T min_gain);
 
-    void set_gain_limits(double min_gain, double max_gain);
+    void set_gain_limits(T min_gain, T max_gain);
 
-    double get_scale(void) const;
-    void set_scale(double scale);
+    T get_scale(void) const;
+    void set_scale(T scale);
 
-    double get_bandwidth(void) const;
-    void set_bandwidth(double bandwidth);
+    T get_bandwidth(void) const;
+    void set_bandwidth(T bandwidth);
 
-    double get_rssi(void) const;
-    void set_rssi(double rssi);
+    T get_rssi(void) const;
+    void set_rssi(T rssi);
 
-    double get_gain(void) const;
-    void set_gain(double gain);
+    T get_gain(void) const;
+    void set_gain(T gain);
 
     void lock(void);
     void unlock(void);
     bool locked(void) const;
 
-    T execute(T x);
-    std::vector<T> execute(std::vector<T> const& in);
+    TC execute(TC x);
+    std::vector<TC> execute(std::vector<TC> const& in);
 
 private:
-    void internal_execute(double energy);
+    void internal_execute(T energy);
     void clamp_gain(void);
 
-    double max_gain_;   //!< maximum gain
-    double min_gain_;   //!< minimum gain
-    double gain_;       //!< current gain
-    double scale_;      //!< output scale
-    double alpha_;      //!< feedback gain
-    double energy_;     //!< signal energy estimate
+    T max_gain_;   //!< maximum gain
+    T min_gain_;   //!< minimum gain
+    T gain_;       //!< current gain
+    T scale_;      //!< output scale
+    T alpha_;      //!< feedback gain
+    T energy_;     //!< signal energy estimate
     bool locked_;       //!< locked
 };
 
 #include "detail/agc.ipp"
 
-using agc_f = AGC<float>;
-using agc_d = AGC<double>;
-using agc_cf = AGC<std::complex<float>>;
-using agc_cd = AGC<std::complex<double>>;
+using agc_f = AGC<float, float>;
+using agc_d = AGC<double, double>;
+using agc_cf = AGC<float, std::complex<float>>;
+using agc_cd = AGC<double, std::complex<double>>;
 
 } // namespace
 

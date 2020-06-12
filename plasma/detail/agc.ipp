@@ -5,8 +5,8 @@
 //! \date 2020
 //! \copyright AmateurRadio.Engineer
 ////////////////////////////////////////////////////////////////////////////////
-template <typename T>
-AGC<T>::AGC(void)
+template <typename T, typename TC>
+AGC<T,TC>::AGC(void)
     : max_gain_(1e6)
     , min_gain_(1e-6)
     , gain_(1.0)
@@ -17,109 +17,109 @@ AGC<T>::AGC(void)
 {
 }
 
-template <typename T>
-double AGC<T>::get_max_gain(void) const
+template <typename T, typename TC>
+T AGC<T,TC>::get_max_gain(void) const
 {
     return max_gain_;
 }
 
-template <typename T>
-void AGC<T>::set_max_gain(double max_gain)
+template <typename T, typename TC>
+void AGC<T,TC>::set_max_gain(T max_gain)
 {
     max_gain_ = max_gain;
     clamp_gain();
 }
 
-template <typename T>
-double AGC<T>::get_min_gain(void) const
+template <typename T, typename TC>
+T AGC<T,TC>::get_min_gain(void) const
 {
     return min_gain_;
 }
 
-template <typename T>
-void AGC<T>::set_min_gain(double min_gain)
+template <typename T, typename TC>
+void AGC<T,TC>::set_min_gain(T min_gain)
 {
     min_gain_ = min_gain;
     clamp_gain();
 }
 
-template <typename T>
-void AGC<T>::set_gain_limits(double min_gain, double max_gain)
+template <typename T, typename TC>
+void AGC<T,TC>::set_gain_limits(T min_gain, T max_gain)
 {
     min_gain_ = min_gain;
     max_gain_ = max_gain;
     clamp_gain();
 }
 
-template <typename T>
-double AGC<T>::get_scale(void) const
+template <typename T, typename TC>
+T AGC<T,TC>::get_scale(void) const
 {
     return scale_;
 }
 
-template <typename T>
-void AGC<T>::set_scale(double scale)
+template <typename T, typename TC>
+void AGC<T,TC>::set_scale(T scale)
 {
     scale_ = scale;
 }
 
-template <typename T>
-double AGC<T>::get_bandwidth(void) const
+template <typename T, typename TC>
+T AGC<T,TC>::get_bandwidth(void) const
 {
     return alpha_;
 }
 
-template <typename T>
-void AGC<T>::set_bandwidth(double bandwidth)
+template <typename T, typename TC>
+void AGC<T,TC>::set_bandwidth(T bandwidth)
 {
     alpha_ = bandwidth;
 }
 
-template <typename T>
-double AGC<T>::get_rssi(void) const
+template <typename T, typename TC>
+T AGC<T,TC>::get_rssi(void) const
 {
     return -20. * std::log10(gain_);
 }
 
-template <typename T>
-void AGC<T>::set_rssi(double rssi)
+template <typename T, typename TC>
+void AGC<T,TC>::set_rssi(T rssi)
 {
     set_gain(std::pow(10., -rssi / 20.));
 }
 
-template <typename T>
-double AGC<T>::get_gain(void) const
+template <typename T, typename TC>
+T AGC<T,TC>::get_gain(void) const
 {
     return gain_;
 }
 
-template <typename T>
-void AGC<T>::set_gain(double gain)
+template <typename T, typename TC>
+void AGC<T,TC>::set_gain(T gain)
 {
     gain_ = gain;
     clamp_gain();
 }
 
-template <typename T>
-void AGC<T>::lock(void)
+template <typename T, typename TC>
+void AGC<T,TC>::lock(void)
 {
     locked_ = true;
 }
 
-template <typename T>
-void AGC<T>::unlock(void)
+template <typename T, typename TC>
+void AGC<T,TC>::unlock(void)
 {
     locked_ = false;
 }
 
-template <typename T>
-bool AGC<T>::locked(void) const
+template <typename T, typename TC>
+bool AGC<T,TC>::locked(void) const
 {
     return locked_;
 }
 
-template <typename T>
-void AGC<T>::internal_execute(double energy)
+template <typename T, typename TC>
+void AGC<T,TC>::internal_execute(T energy)
 {
     energy_ = (1. - alpha_) * energy_ + alpha_ * energy;
 
@@ -134,30 +134,30 @@ void AGC<T>::internal_execute(double energy)
     clamp_gain();
 }
 
-template <typename T>
-T AGC<T>::execute(T x)
+template <typename T, typename TC>
+TC AGC<T,TC>::execute(TC x)
 {
-    T y = x * gain_;
-    internal_execute(y * std::conj(y));
+    TC y = x * gain_;
+    internal_execute(std::abs(y * std::conj(y)));
     return y * scale_;
 }
 
-template <typename T>
-std::vector<T> AGC<T>::execute(std::vector<T> const& in)
+template <typename T, typename TC>
+std::vector<TC> AGC<T,TC>::execute(std::vector<TC> const& in)
 {
-    std::vector<T> out = in;
+    std::vector<TC> out = in;
 
     for (auto& y : out) {
         y *= gain_;
-        internal_execute(y * std::conj(y));
+        internal_execute(std::abs(y * std::conj(y)));
         y *= scale_;
     }
 
     return out;
 }
 
-template <typename T>
-void AGC<T>::clamp_gain(void)
+template <typename T, typename TC>
+void AGC<T,TC>::clamp_gain(void)
 {
     if (gain_ > max_gain_) {
         gain_ = max_gain_;

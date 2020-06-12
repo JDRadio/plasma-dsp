@@ -60,8 +60,8 @@ private:
 
 #include "detail/nco.ipp"
 
-using nco_f = NCO<float>;
-using nco_d = NCO<double>;
+using nco_cf = NCO<float>;
+using nco_cd = NCO<double>;
 
 } // namespace
 

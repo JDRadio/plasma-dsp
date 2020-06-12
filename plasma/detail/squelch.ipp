@@ -5,6 +5,11 @@
 //! \date 2020
 //! \copyright AmateurRadio.Engineer
 ////////////////////////////////////////////////////////////////////////////////
+#include <algorithm>
+#include <functional>
+
+namespace plasma {
+
 template <typename T, typename TC>
 SQUELCH<T,TC>::SQUELCH(void)
     : alpha_(0.1)
@@ -139,13 +144,19 @@ typename SQUELCH<T,TC>::status SQUELCH<T,TC>::execute(TC x)
 }
 
 template <typename T, typename TC>
-std::vector<typename SQUELCH<T,TC>::status> SQUELCH<T,TC>::execute(std::vector<TC> const& in)
+void SQUELCH<T,TC>::execute(std::vector<TC> const& in, std::vector<status>& out)
 {
-    std::vector<status> out(in.size());
+    out.resize(in.size());
 
-    for (std::size_t i = 0; i < in.size(); i++) {
-        out[i] = execute(in[i]);
+    for (std::size_t n = 0; n < in.size(); ++n) {
+        out[n] = execute(in[n]);
     }
-
-    return out;
 }
+
+template <typename T, typename TC>
+void SQUELCH<T,TC>::execute(std::vector<TC> const& in)
+{
+    std::for_each(in.cbegin(), in.cend(), std::bind(execute, this, std::placeholders::_1));
+}
+
+} // namespace

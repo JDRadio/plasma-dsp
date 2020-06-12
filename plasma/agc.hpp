@@ -9,7 +9,6 @@
 #define PLASMA_AGC_HPP
 
 #include <complex>
-#include <cmath>
 #include <vector>
 
 namespace plasma {
@@ -45,7 +44,8 @@ public:
     bool locked(void) const;
 
     TC execute(TC x);
-    std::vector<TC> execute(std::vector<TC> const& in);
+    void execute(std::vector<TC>& inout);
+    void execute(std::vector<TC> const& in, std::vector<TC>& out);
 
 private:
     void internal_execute(T energy);
@@ -60,13 +60,13 @@ private:
     bool locked_;       //!< locked
 };
 
-#include "detail/agc.ipp"
-
 using agc_f = AGC<float, float>;
 using agc_d = AGC<double, double>;
 using agc_cf = AGC<float, std::complex<float>>;
 using agc_cd = AGC<double, std::complex<double>>;
 
 } // namespace
+
+#include "detail/agc.ipp"
 
 #endif

@@ -46,21 +46,20 @@ public:
     bool locked(void) const;
 
     status execute(TC x);
-    std::vector<status> execute(std::vector<TC> const& in);
+    void execute(std::vector<TC> const& in);
+    void execute(std::vector<TC> const& in, std::vector<status>& out);
 
 private:
     status internal_execute(T energy);
 
-    T alpha_;          //!< feedback gain for lowpass filter
-    T energy_;         //!< signal energy estimate
+    T alpha_;               //!< feedback gain for lowpass filter
+    T energy_;              //!< signal energy estimate
     bool locked_;           //!< locked
-    T threshold_;      //!< energy threshold in dB
+    T threshold_;           //!< energy threshold in dB
     unsigned int timeout_;  //!< number of samples below threshold before turning on
     unsigned int timer_;    //!< timer in samples below threshold
     status status_;         //!< current status
 };
-
-#include "detail/squelch.ipp"
 
 using squelch_f = SQUELCH<float, float>;
 using squelch_d = SQUELCH<double, double>;
@@ -68,5 +67,7 @@ using squelch_cf = SQUELCH<float, std::complex<float>>;
 using squelch_cd = SQUELCH<double, std::complex<double>>;
 
 } // namespace
+
+#include "detail/squelch.ipp"
 
 #endif

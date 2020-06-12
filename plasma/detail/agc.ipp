@@ -5,6 +5,12 @@
 //! \date 2020
 //! \copyright AmateurRadio.Engineer
 ////////////////////////////////////////////////////////////////////////////////
+#include <algorithm>
+#include <functional>
+#include <cmath>
+
+namespace plasma {
+
 template <typename T, typename TC>
 AGC<T,TC>::AGC(void)
     : max_gain_(1e6)
@@ -143,17 +149,19 @@ TC AGC<T,TC>::execute(TC x)
 }
 
 template <typename T, typename TC>
-std::vector<TC> AGC<T,TC>::execute(std::vector<TC> const& in)
+void AGC<T,TC>::execute(std::vector<TC> const& in, std::vector<TC>& out)
 {
-    std::vector<TC> out = in;
+    out.resize(in.size());
 
-    for (auto& y : out) {
-        y *= gain_;
-        internal_execute(std::abs(y * std::conj(y)));
-        y *= scale_;
+    for (std::size_t n = 0; n < in.size(); ++n) {
+        out[n] = execute(in[n]);
     }
+}
 
-    return out;
+template <typename T, typename TC>
+void AGC<T,TC>::execute(std::vector<TC>& inout)
+{
+    std::for_each(inout.begin(), inout.end(), std::bind(execute, this, std::ref(std::placeholders::_1)));
 }
 
 template <typename T, typename TC>
@@ -166,3 +174,5 @@ void AGC<T,TC>::clamp_gain(void)
         gain_ = min_gain_;
     }
 }
+
+} // namespace

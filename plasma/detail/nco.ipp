@@ -82,7 +82,7 @@ void NCO<T>::constrain_phase(void)
 template <typename T>
 void NCO<T>::step(void)
 {
-    theta_ + d_theta_;
+    theta_ += d_theta_;
     constrain_phase();
 }
 

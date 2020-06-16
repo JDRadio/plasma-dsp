@@ -57,19 +57,33 @@ double NCO<T>::get_phase(void) const
 template <typename T>
 void NCO<T>::set_phase(double phase)
 {
-    theta_ = std::fmod(phase, MATH<T>::two_pi);
+    theta_ = phase;
+    constrain_phase();
 }
 
 template <typename T>
 void NCO<T>::adjust_phase(double dp)
 {
-    theta_ = std::fmod(theta_ + dp, MATH<T>::two_pi);
+    theta_ += dp;
+}
+
+template <typename T>
+void NCO<T>::constrain_phase(void)
+{
+    while (theta_ >= MATH<T>::two_pi) {
+        theta_ -= MATH<T>::two_pi;
+    }
+
+    while (theta_ < 0) {
+        theta_ += MATH<T>::two_pi;
+    }
 }
 
 template <typename T>
 void NCO<T>::step(void)
 {
-    theta_ = std::fmod(theta_ + d_theta_, MATH<T>::two_pi);
+    theta_ + d_theta_;
+    constrain_phase();
 }
 
 template <typename T>

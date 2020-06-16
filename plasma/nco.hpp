@@ -45,6 +45,9 @@ public:
     std::vector<std::complex<T>> mix_down(std::vector<std::complex<T>> const& in);
 
 private:
+    void constrain_phase(void);
+
+
     //! Phase [rad]
     double theta_;
 

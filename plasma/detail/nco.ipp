@@ -95,13 +95,17 @@ void NCO<T>::reset(void)
 template <typename T>
 std::complex<T> NCO<T>::mix_up(std::complex<T> x)
 {
-    return x * std::exp(std::complex<T>(0, theta_));
+    // std::exp() is very slow, let's use the following equivalence
+    // e^ix = cos(x) + i sin(x)
+    return x * std::complex<T>(std::cos(theta_), std::sin(theta_));
 }
 
 template <typename T>
 std::complex<T> NCO<T>::mix_down(std::complex<T> x)
 {
-    return x * std::exp(std::complex<T>(0, -theta_));
+    // std::exp() is very slow, let's use the following equivalence
+    // e^-ix = cos(-x) + i sin(-x) = cos(x) - i sin(x)
+    return x * std::complex<T>(std::cos(theta_), -std::sin(theta_));
 }
 
 template <typename T>
@@ -109,7 +113,7 @@ std::vector<std::complex<T>> NCO<T>::mix_up(std::vector<std::complex<T>> const& 
 {
     std::vector<std::complex<T>> out(in.size());
 
-    for (std::size_t i = 0; i < in.size(); i++) {
+    for (std::size_t i = 0; i < in.size(); ++i) {
         out[i] = mix_up(in[i]);
         step();
     }
@@ -122,7 +126,7 @@ std::vector<std::complex<T>> NCO<T>::mix_down(std::vector<std::complex<T>> const
 {
     std::vector<std::complex<T>> out(in.size());
 
-    for (std::size_t i = 0; i < in.size(); i++) {
+    for (std::size_t i = 0; i < in.size(); ++i) {
         out[i] = mix_down(in[i]);
         step();
     }

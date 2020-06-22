@@ -126,7 +126,7 @@ typename SQUELCH<T,TC>::status SQUELCH<T,TC>::internal_execute(T energy)
             timer_ = timeout_;
         }
         else if (status_ == status::holding) {
-            timer_--;
+            --timer_;
 
             if (timer_ == 0) {
                 status_ = status::on;
@@ -156,7 +156,7 @@ void SQUELCH<T,TC>::execute(std::vector<TC> const& in, std::vector<status>& out)
 template <typename T, typename TC>
 void SQUELCH<T,TC>::execute(std::vector<TC> const& in)
 {
-    std::for_each(in.cbegin(), in.cend(), std::bind(execute, this, std::placeholders::_1));
+    std::for_each(in.cbegin(), in.cend(), [this] (TC x) { execute(x); });
 }
 
 } // namespace

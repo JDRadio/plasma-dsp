@@ -84,13 +84,13 @@ void AGC<T,TC>::set_bandwidth(T bandwidth)
 template <typename T, typename TC>
 T AGC<T,TC>::get_rssi(void) const
 {
-    return -20. * std::log10(gain_);
+    return -10. * std::log10(gain_);
 }
 
 template <typename T, typename TC>
 void AGC<T,TC>::set_rssi(T rssi)
 {
-    set_gain(std::pow(10., -rssi / 20.));
+    set_gain(std::pow(10., -rssi / 10.));
 }
 
 template <typename T, typename TC>
@@ -143,7 +143,7 @@ void AGC<T,TC>::internal_execute(T energy)
 template <typename T, typename TC>
 TC AGC<T,TC>::execute(TC x)
 {
-    TC y = x * gain_;
+    TC y = x * std::sqrt(gain_);
     internal_execute(std::abs(y * std::conj(y)));
     return y * scale_;
 }
@@ -161,7 +161,7 @@ void AGC<T,TC>::execute(std::vector<TC> const& in, std::vector<TC>& out)
 template <typename T, typename TC>
 void AGC<T,TC>::execute(std::vector<TC>& inout)
 {
-    std::for_each(inout.begin(), inout.end(), std::bind(execute, this, std::ref(std::placeholders::_1)));
+    std::for_each(inout.begin(), inout.end(), [this] (TC& x) { x = execute(x); });
 }
 
 template <typename T, typename TC>

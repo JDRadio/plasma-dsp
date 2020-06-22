@@ -6,6 +6,14 @@
 //! \copyright AmateurRadio.Engineer
 ////////////////////////////////////////////////////////////////////////////////
 template <typename T, typename T_TAPS>
+FIR<T,T_TAPS>::FIR(void)
+    : taps_()
+    , samples_()
+    , head_(0)
+{
+}
+
+template <typename T, typename T_TAPS>
 void FIR<T,T_TAPS>::set_taps(std::vector<T_TAPS> const& taps)
 {
     taps_.clear();
@@ -14,6 +22,7 @@ void FIR<T,T_TAPS>::set_taps(std::vector<T_TAPS> const& taps)
 
     samples_.clear();
     samples_.resize(taps_.size(), 0);
+    head_ = 0;
 }
 
 template <typename T, typename T_TAPS>
@@ -27,13 +36,17 @@ void FIR<T,T_TAPS>::reset(void)
 {
     samples_.clear();
     samples_.resize(taps_.size(), 0);
+    head_ = 0;
 }
 
 template <typename T, typename T_TAPS>
 void FIR<T,T_TAPS>::push(T x)
 {
-    samples_.erase(samples_.begin());
-    samples_.push_back(x);
+    samples_[head_++] = x;
+
+    if (head_ == samples_.size()) {
+        head_ = 0;
+    }
 }
 
 template <typename T, typename T_TAPS>
@@ -41,7 +54,7 @@ T FIR<T,T_TAPS>::execute(void)
 {
     T v = 0;
 
-    for (std::size_t i = 0; i < taps_.size(); i++) {
+    for (std::size_t i = 0; i < taps_.size(); ++i) {
         v += taps_[i] * samples_[i];
     }
 
@@ -53,7 +66,7 @@ std::vector<T> FIR<T,T_TAPS>::execute(std::vector<T> const& in)
 {
     std::vector<T> out(in.size());
 
-    for (std::size_t i = 0; i < in.size(); i++) {
+    for (std::size_t i = 0; i < in.size(); ++i) {
         push(in[i]);
         out[i] = execute();
     }

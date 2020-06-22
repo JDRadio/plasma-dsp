@@ -18,7 +18,7 @@
 
 namespace plasma {
 
-template <typename T, typename T_TAPS = double>
+template <typename T, typename T_TAPS>
 class FIR_DESIGNER {
 public:
     FIR_DESIGNER(void) = delete;

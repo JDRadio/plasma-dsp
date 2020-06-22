@@ -57,7 +57,7 @@ private:
     T scale_;      //!< output scale
     T alpha_;      //!< feedback gain
     T energy_;     //!< signal energy estimate
-    bool locked_;       //!< locked
+    bool locked_;  //!< locked
 };
 
 using agc_f = AGC<float, float>;

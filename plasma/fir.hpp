@@ -13,10 +13,11 @@
 
 namespace plasma {
 
-template <typename T, typename T_TAPS = double>
+//! Finite Impulse Response (FIR) filter
+template <typename T, typename T_TAPS>
 class FIR {
 public:
-    FIR(void) = default;
+    FIR(void);
     ~FIR(void) = default;
 
     void set_taps(std::vector<T_TAPS> const& taps);
@@ -25,14 +26,24 @@ public:
 
     void reset(void);
 
+    //! Push a sample to the filter
     void push(T x);
+
+    //! Calculate the filter output
     T execute(void);
 
+    //! Push samples and calculate the filter output after each one
     std::vector<T> execute(std::vector<T> const& in);
 
 private:
+    //! Filter taps
     std::vector<T_TAPS> taps_;
+
+    //! Samples inside the filter
     std::vector<T> samples_;
+
+    //! Circular buffer write position
+    std::size_t head_;
 };
 
 #include "detail/fir.ipp"

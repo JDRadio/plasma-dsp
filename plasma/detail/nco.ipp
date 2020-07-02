@@ -90,6 +90,7 @@ template <typename T>
 void NCO<T>::reset(void)
 {
     theta_ = 0;
+    d_theta_ = 0;
 }
 
 template <typename T>

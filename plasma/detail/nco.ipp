@@ -9,6 +9,8 @@ template <typename T>
 NCO<T>::NCO(void)
     : theta_(0)
     , d_theta_(0)
+    , alpha_(0.1)
+    , beta_(std::sqrt(0.1))
 {
 }
 

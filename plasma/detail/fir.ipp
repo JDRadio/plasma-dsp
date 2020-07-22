@@ -16,8 +16,9 @@ FIR<T,T_TAPS>::FIR(void)
 template <typename T, typename T_TAPS>
 void FIR<T,T_TAPS>::set_taps(const std::vector<T_TAPS>& taps)
 {
-    taps_.resize(taps.size());
-    std::copy(taps.cbegin(), taps.cend(), taps_.begin());
+    taps_.clear();
+    taps_.reserve(taps.size());
+    taps_.insert(taps_.end(), taps.crbegin(), taps.crend());
 
     reset();
 }
@@ -52,7 +53,7 @@ T FIR<T,T_TAPS>::execute(void)
     T v = 0;
 
     for (std::size_t i = 0; i < taps_.size(); ++i) {
-        v += taps_[i] * samples_[i];
+        v += taps_[i] * samples_[(i + head_) % samples_.size()];
     }
 
     return v;

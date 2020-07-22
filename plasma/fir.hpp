@@ -20,7 +20,7 @@ public:
     FIR(void);
     ~FIR(void) = default;
 
-    void set_taps(std::vector<T_TAPS> const& taps);
+    void set_taps(const std::vector<T_TAPS>& taps);
 
     unsigned int get_delay(void) const;
 
@@ -33,7 +33,10 @@ public:
     T execute(void);
 
     //! Push samples and calculate the filter output after each one
-    std::vector<T> execute(std::vector<T> const& in);
+    std::vector<T> execute(const std::vector<T>& in);
+
+    //! Push samples and calculate the filter output after each one
+    void execute(const std::vector<T>& in, std::vector<T>& out);
 
 private:
     //! Filter taps

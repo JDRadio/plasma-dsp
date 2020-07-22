@@ -14,15 +14,12 @@ FIR<T,T_TAPS>::FIR(void)
 }
 
 template <typename T, typename T_TAPS>
-void FIR<T,T_TAPS>::set_taps(std::vector<T_TAPS> const& taps)
+void FIR<T,T_TAPS>::set_taps(const std::vector<T_TAPS>& taps)
 {
-    taps_.clear();
-    taps_.reserve(taps.size());
-    taps_.insert(taps_.end(), taps.rbegin(), taps.rend());
+    taps_.resize(taps.size());
+    std::copy(taps.cbegin(), taps.cend(), taps_.begin());
 
-    samples_.clear();
-    samples_.resize(taps_.size(), 0);
-    head_ = 0;
+    reset();
 }
 
 template <typename T, typename T_TAPS>
@@ -62,14 +59,22 @@ T FIR<T,T_TAPS>::execute(void)
 }
 
 template <typename T, typename T_TAPS>
-std::vector<T> FIR<T,T_TAPS>::execute(std::vector<T> const& in)
+std::vector<T> FIR<T,T_TAPS>::execute(const std::vector<T>& in)
 {
     std::vector<T> out(in.size());
+
+    execute(in, out);
+
+    return out;
+}
+
+template <typename T, typename T_TAPS>
+void FIR<T,T_TAPS>::execute(const std::vector<T>& in, std::vector<T>& out)
+{
+    out.resize(in.size());
 
     for (std::size_t i = 0; i < in.size(); ++i) {
         push(in[i]);
         out[i] = execute();
     }
-
-    return out;
 }

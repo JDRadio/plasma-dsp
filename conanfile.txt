@@ -1,0 +1,6 @@
+[generators]
+cmake
+
+[requires]
+benchmark/1.5.2
+gtest/1.10.0

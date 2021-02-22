@@ -94,14 +94,11 @@ public:
     //! Default constructor
     nco(void) noexcept;
 
+    ~nco(void) noexcept;
 
     //! Set the frequency
     //! \param[in] norm_freq Normalized frequency [-0.5, 0.5[
     void set_frequency(double norm_freq) noexcept;
-
-    //! Set the lookup table size
-    //! \param[in] size Lookup table size
-    void set_lookup_size(unsigned int size) noexcept;
 
     //! Mix up in place
     //! \param[in,out] inout Complex sample in pairs of real/imaginary components
@@ -148,17 +145,27 @@ public:
     //! \note You do not need to call this after calling any of the mixing functions
     void step(void) noexcept;
 
-private:
+public:
+    //! Integral part size in bits
+    static constexpr auto INTEGRAL_SIZE = 16;
+    //! Fractional part size in bits
+    static constexpr auto MANTISSA_SIZE = 64 - INTEGRAL_SIZE;
+
+
+    //! Build the lookup table
+    void build_lookup_table(void) noexcept;
+
+
     //! Phase
-    double theta_;
+    std::uint64_t theta_;
     //! Frequency
-    double dtheta_;
+    std::uint64_t dtheta_;
     //! Lookup table
-    std::vector<SampleType> lookup_;
-    //! Lookup table size
-    std::size_t lookup_size_;
-    //! Lookup table size as a double
-    double lookup_size_d_;
+    SampleType* lookup_;
+    //! Cosine offset
+    std::uint64_t cos_offset_;
+    //! Sine offset
+    std::uint64_t sin_offset_;
 };
 
 

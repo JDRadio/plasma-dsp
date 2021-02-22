@@ -12,33 +12,40 @@ namespace plasma {
 
 template <typename SampleType>
 nco<SampleType, use_lookup>::nco(void) noexcept :
-    theta_{},
-    dtheta_{},
-    lookup_{},
-    lookup_size_{},
-    lookup_size_d_{}
+    theta_{0},
+    dtheta_{0},
+    lookup_{nullptr},
+    cos_offset_{0},
+    sin_offset_{0}
 {
-    set_lookup_size(4096);
+    build_lookup_table();
     set_frequency(0.0);
+}
+
+template <typename SampleType>
+nco<SampleType, use_lookup>::~nco(void) noexcept
+{
+    delete[] lookup_;
 }
 
 template <typename SampleType>
 void nco<SampleType, use_lookup>::set_frequency(double norm_freq) noexcept
 {
-    // dtheta_ = static_cast<std::uint32_t>(std::round((norm_freq < 0 ? norm_freq + 1.0 : norm_freq) * 0xFFFFFFFF));
-    dtheta_ = norm_freq < 0 ? norm_freq + 1.0 : norm_freq;
+    auto freq = norm_freq < 0 ? norm_freq + 1.0 : norm_freq;
+    dtheta_ = static_cast<std::uint64_t>(std::round(freq * (1ULL << INTEGRAL_SIZE) * (1ULL<<MANTISSA_SIZE)));
 }
 
 template <typename SampleType>
-void nco<SampleType, use_lookup>::set_lookup_size(unsigned int size) noexcept
+void nco<SampleType, use_lookup>::build_lookup_table(void) noexcept
 {
-    lookup_size_ = size;
-    lookup_size_d_ = static_cast<double>(lookup_size_) + 0.5;
-    lookup_.resize(lookup_size_);
+    std::uint64_t size = (1ULL << INTEGRAL_SIZE);
+    cos_offset_ = (((static_cast<std::uint64_t>(size) >> 2)) << MANTISSA_SIZE) + (1ULL << (MANTISSA_SIZE-1));
+    sin_offset_ = 1ULL << (MANTISSA_SIZE-1);
+    lookup_ = new SampleType[size];
 
-    auto const typed_size = static_cast<double>(lookup_size_);
+    auto const typed_size = static_cast<double>(size);
 
-    for (unsigned int i = 0; i < lookup_size_; ++i) {
+    for (unsigned int i = 0; i < size; ++i) {
         lookup_[i] = std::sin(TWO_PI * static_cast<double>(i) / typed_size);
     }
 }
@@ -54,10 +61,6 @@ template <typename SampleType>
 void nco<SampleType, use_lookup>::step(void) noexcept
 {
     theta_ += dtheta_;
-
-    if (theta_ >= lookup_size_) {
-        theta_ -= lookup_size_;
-    }
 }
 
 
@@ -200,19 +203,13 @@ void nco<SampleType, use_lookup>::mix_up_one(SampleType& re, SampleType& im) noe
 {
     auto const a = re;
     auto const b = im;
-    // auto const& c = lookup_[((static_cast<std::uint64_t>(theta_) + 0x40000000) * lookup_size_ / 0xFFFFFFFF) % lookup_size_];
-    // auto const& d = lookup_[static_cast<std::uint64_t>(theta_) * lookup_size_ / 0xFFFFFFFF];
-    auto const& c = lookup_[(static_cast<std::size_t>(theta_ * lookup_size_d_) + lookup_size_ / 4) % lookup_size_];
-    auto const& d = lookup_[static_cast<std::size_t>(theta_ * lookup_size_d_)];
+    auto const& c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
+    auto const& d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
 
     re = a * c - b * d;
     im = a * d + b * c;
 
     theta_ += dtheta_;
-
-    if (theta_ >= 1.0) {
-        theta_ -= 1.0;
-    }
 }
 
 template <typename SampleType>
@@ -220,19 +217,13 @@ void nco<SampleType, use_lookup>::mix_up_one(std::complex<SampleType>& inout) no
 {
     auto const a = inout.real();
     auto const b = inout.imag();
-    // auto const& c = lookup_[((static_cast<std::uint64_t>(theta_) + 0x40000000) * lookup_size_ / 0xFFFFFFFF) % lookup_size_];
-    // auto const& d = lookup_[static_cast<std::uint64_t>(theta_) * lookup_size_ / 0xFFFFFFFF];
-    auto const& c = lookup_[(static_cast<std::size_t>(theta_ * lookup_size_d_) + lookup_size_ / 4) % lookup_size_];
-    auto const& d = lookup_[static_cast<std::size_t>(theta_ * lookup_size_d_)];
+    auto const& c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
+    auto const& d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
 
     inout.real(a * c - b * d);
     inout.imag(a * d + b * c);
 
     theta_ += dtheta_;
-
-    if (theta_ >= 1.0) {
-        theta_ -= 1.0;
-    }
 }
 
 
@@ -241,19 +232,13 @@ void nco<SampleType, use_lookup>::mix_down_one(SampleType& re, SampleType& im) n
 {
     auto const a = re;
     auto const b = im;
-    // auto const& c = lookup_[((static_cast<std::uint64_t>(theta_) + 0x40000000) * lookup_size_ / 0xFFFFFFFF) % lookup_size_];
-    // auto const& d = lookup_[static_cast<std::uint64_t>(theta_) * lookup_size_ / 0xFFFFFFFF];
-    auto const& c = lookup_[(static_cast<std::size_t>(theta_ * lookup_size_d_) + lookup_size_ / 4) % lookup_size_];
-    auto const& d = lookup_[static_cast<std::size_t>(theta_ * lookup_size_d_)];
+    auto const& c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
+    auto const& d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
 
     re = a * c + b * d;
     im = b * c - a * d;
 
     theta_ += dtheta_;
-
-    if (theta_ >= 1.0) {
-        theta_ -= 1.0;
-    }
 }
 
 template <typename SampleType>
@@ -261,19 +246,13 @@ void nco<SampleType, use_lookup>::mix_down_one(std::complex<SampleType>& inout) 
 {
     auto const a = inout.real();
     auto const b = inout.imag();
-    // auto const& c = lookup_[((static_cast<std::uint64_t>(theta_) + 0x40000000) * lookup_size_ / 0xFFFFFFFF) % lookup_size_];
-    // auto const& d = lookup_[static_cast<std::uint64_t>(theta_) * lookup_size_ / 0xFFFFFFFF];
-    auto const& c = lookup_[(static_cast<std::size_t>(theta_ * lookup_size_d_) + lookup_size_ / 4) % lookup_size_];
-    auto const& d = lookup_[static_cast<std::size_t>(theta_ * lookup_size_d_)];
+    auto const& c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
+    auto const& d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
 
     inout.real(a * c + b * d);
     inout.imag(b * c - a * d);
 
     theta_ += dtheta_;
-
-    if (theta_ >= 1.0) {
-        theta_ -= 1.0;
-    }
 }
 
 } // namespace

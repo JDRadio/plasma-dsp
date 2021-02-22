@@ -12,7 +12,6 @@ template <typename SampleType>
 void nco_use_lookup(benchmark::State& state)
 {
     plasma::nco<SampleType, plasma::use_lookup> nco;
-    nco.set_lookup_size(4096);
     nco.set_frequency(0.01);
 
     std::size_t len = state.range(0);
@@ -41,7 +40,6 @@ template <typename SampleType>
 void nco_use_lookup_complex(benchmark::State& state)
 {
     plasma::nco<SampleType, plasma::use_lookup> nco;
-    nco.set_lookup_size(4096);
     nco.set_frequency(0.01);
 
     std::size_t len = state.range(0);

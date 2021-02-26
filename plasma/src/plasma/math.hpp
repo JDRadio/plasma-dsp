@@ -12,7 +12,7 @@
 
 namespace plasma {
 
-static constexpr auto TWO_PI = 2 * acos(-1.0);
+static constexpr auto TWO_PI = 2 * std::acos(-1.0);
 
 } // namespace
 

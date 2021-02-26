@@ -67,66 +67,68 @@ void nco<SampleType, use_lookup>::step(void) noexcept
 template <typename SampleType>
 void nco<SampleType, use_lookup>::mix_up(std::vector<SampleType>& inout) noexcept
 {
-    auto const len = inout.size();
-    auto const len_unrolled = static_cast<std::size_t>(len / 32) * 32;
+    auto* ptr = inout.data();
+    unsigned int const len = inout.size();
+    unsigned int const len_unrolled = static_cast<unsigned int>(len / 32) * 32;
 
-    for (std::size_t i = 0; i < len_unrolled; i += 32) {
-        mix_up_one(inout[i], inout[i+1]);
-        mix_up_one(inout[i+2], inout[i+3]);
-        mix_up_one(inout[i+4], inout[i+5]);
-        mix_up_one(inout[i+6], inout[i+7]);
+    for (unsigned int i = 0; i < len_unrolled; i += 32) {
+        mix_up_one(ptr[i], ptr[i+1]);
+        mix_up_one(ptr[i+2], ptr[i+3]);
+        mix_up_one(ptr[i+4], ptr[i+5]);
+        mix_up_one(ptr[i+6], ptr[i+7]);
 
-        mix_up_one(inout[i+8], inout[i+9]);
-        mix_up_one(inout[i+10], inout[i+11]);
-        mix_up_one(inout[i+12], inout[i+13]);
-        mix_up_one(inout[i+14], inout[i+15]);
+        mix_up_one(ptr[i+8], ptr[i+9]);
+        mix_up_one(ptr[i+10], ptr[i+11]);
+        mix_up_one(ptr[i+12], ptr[i+13]);
+        mix_up_one(ptr[i+14], ptr[i+15]);
 
-        mix_up_one(inout[i+16], inout[i+17]);
-        mix_up_one(inout[i+18], inout[i+19]);
-        mix_up_one(inout[i+20], inout[i+21]);
-        mix_up_one(inout[i+22], inout[i+23]);
+        mix_up_one(ptr[i+16], ptr[i+17]);
+        mix_up_one(ptr[i+18], ptr[i+19]);
+        mix_up_one(ptr[i+20], ptr[i+21]);
+        mix_up_one(ptr[i+22], ptr[i+23]);
 
-        mix_up_one(inout[i+24], inout[i+25]);
-        mix_up_one(inout[i+26], inout[i+27]);
-        mix_up_one(inout[i+28], inout[i+29]);
-        mix_up_one(inout[i+30], inout[i+31]);
+        mix_up_one(ptr[i+24], ptr[i+25]);
+        mix_up_one(ptr[i+26], ptr[i+27]);
+        mix_up_one(ptr[i+28], ptr[i+29]);
+        mix_up_one(ptr[i+30], ptr[i+31]);
     }
 
-    for (std::size_t i = len_unrolled; i < len; i += 2) {
-        mix_up_one(inout[i], inout[i+1]);
+    for (unsigned int i = len_unrolled; i < len; i += 2) {
+        mix_up_one(ptr[i], ptr[i+1]);
     }
 }
 
 template <typename SampleType>
 void nco<SampleType, use_lookup>::mix_up(std::vector<std::complex<SampleType>>& inout) noexcept
 {
-    auto const len = inout.size();
-    auto const len_unrolled = static_cast<std::size_t>(len / 16) * 16;
+    auto* ptr = inout.data();
+    unsigned int const len = inout.size();
+    unsigned int const len_unrolled = static_cast<unsigned int>(len / 16) * 16;
 
-    for (std::size_t i = 0; i < len_unrolled; i += 16) {
-        mix_up_one(inout[i]);
-        mix_up_one(inout[i+1]);
-        mix_up_one(inout[i+2]);
-        mix_up_one(inout[i+3]);
+    for (unsigned int i = 0; i < len_unrolled; i += 16) {
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
 
-        mix_up_one(inout[i+4]);
-        mix_up_one(inout[i+5]);
-        mix_up_one(inout[i+6]);
-        mix_up_one(inout[i+7]);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
 
-        mix_up_one(inout[i+8]);
-        mix_up_one(inout[i+9]);
-        mix_up_one(inout[i+10]);
-        mix_up_one(inout[i+11]);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
 
-        mix_up_one(inout[i+12]);
-        mix_up_one(inout[i+13]);
-        mix_up_one(inout[i+14]);
-        mix_up_one(inout[i+15]);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
+        mix_up_one(*ptr++);
     }
 
-    for (std::size_t i = len_unrolled; i < len; ++i) {
-        mix_up_one(inout[i]);
+    for (unsigned int i = len_unrolled; i < len; ++i) {
+        mix_up_one(*ptr++);
     }
 }
 
@@ -134,66 +136,68 @@ void nco<SampleType, use_lookup>::mix_up(std::vector<std::complex<SampleType>>& 
 template <typename SampleType>
 void nco<SampleType, use_lookup>::mix_down(std::vector<SampleType>& inout) noexcept
 {
-    auto const len = inout.size();
-    auto const len_unrolled = static_cast<std::size_t>(len / 32) * 32;
+    auto* ptr = inout.data();
+    unsigned int const len = inout.size();
+    unsigned int const len_unrolled = static_cast<unsigned int>(len / 32) * 32;
 
-    for (std::size_t i = 0; i < len_unrolled; i += 32) {
-        mix_down_one(inout[i], inout[i+1]);
-        mix_down_one(inout[i+2], inout[i+3]);
-        mix_down_one(inout[i+4], inout[i+5]);
-        mix_down_one(inout[i+6], inout[i+7]);
+    for (unsigned int i = 0; i < len_unrolled; i += 32) {
+        mix_down_one(ptr[i], ptr[i+1]);
+        mix_down_one(ptr[i+2], ptr[i+3]);
+        mix_down_one(ptr[i+4], ptr[i+5]);
+        mix_down_one(ptr[i+6], ptr[i+7]);
 
-        mix_down_one(inout[i+8], inout[i+9]);
-        mix_down_one(inout[i+10], inout[i+11]);
-        mix_down_one(inout[i+12], inout[i+13]);
-        mix_down_one(inout[i+14], inout[i+15]);
+        mix_down_one(ptr[i+8], ptr[i+9]);
+        mix_down_one(ptr[i+10], ptr[i+11]);
+        mix_down_one(ptr[i+12], ptr[i+13]);
+        mix_down_one(ptr[i+14], ptr[i+15]);
 
-        mix_down_one(inout[i+16], inout[i+17]);
-        mix_down_one(inout[i+18], inout[i+19]);
-        mix_down_one(inout[i+20], inout[i+21]);
-        mix_down_one(inout[i+22], inout[i+23]);
+        mix_down_one(ptr[i+16], ptr[i+17]);
+        mix_down_one(ptr[i+18], ptr[i+19]);
+        mix_down_one(ptr[i+20], ptr[i+21]);
+        mix_down_one(ptr[i+22], ptr[i+23]);
 
-        mix_down_one(inout[i+24], inout[i+25]);
-        mix_down_one(inout[i+26], inout[i+27]);
-        mix_down_one(inout[i+28], inout[i+29]);
-        mix_down_one(inout[i+30], inout[i+31]);
+        mix_down_one(ptr[i+24], ptr[i+25]);
+        mix_down_one(ptr[i+26], ptr[i+27]);
+        mix_down_one(ptr[i+28], ptr[i+29]);
+        mix_down_one(ptr[i+30], ptr[i+31]);
     }
 
-    for (std::size_t i = len_unrolled; i < len; i += 2) {
-        mix_down_one(inout[i], inout[i+1]);
+    for (unsigned int i = len_unrolled; i < len; i += 2) {
+        mix_down_one(ptr[i], ptr[i+1]);
     }
 }
 
 template <typename SampleType>
 void nco<SampleType, use_lookup>::mix_down(std::vector<std::complex<SampleType>>& inout) noexcept
 {
-    auto const len = inout.size();
-    auto const len_unrolled = static_cast<std::size_t>(len / 16) * 16;
+    auto* ptr = inout.data();
+    unsigned int const len = inout.size();
+    unsigned int const len_unrolled = static_cast<unsigned int>(len / 16) * 16;
 
-    for (std::size_t i = 0; i < len_unrolled; i += 16) {
-        mix_down_one(inout[i]);
-        mix_down_one(inout[i+1]);
-        mix_down_one(inout[i+2]);
-        mix_down_one(inout[i+3]);
+    for (unsigned int i = 0; i < len_unrolled; i += 16) {
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
 
-        mix_down_one(inout[i+4]);
-        mix_down_one(inout[i+5]);
-        mix_down_one(inout[i+6]);
-        mix_down_one(inout[i+7]);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
 
-        mix_down_one(inout[i+8]);
-        mix_down_one(inout[i+9]);
-        mix_down_one(inout[i+10]);
-        mix_down_one(inout[i+11]);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
 
-        mix_down_one(inout[i+12]);
-        mix_down_one(inout[i+13]);
-        mix_down_one(inout[i+14]);
-        mix_down_one(inout[i+15]);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
+        mix_down_one(*ptr++);
     }
 
-    for (std::size_t i = len_unrolled; i < len; ++i) {
-        mix_down_one(inout[i]);
+    for (unsigned int i = len_unrolled; i < len; ++i) {
+        mix_down_one(*ptr++);
     }
 }
 

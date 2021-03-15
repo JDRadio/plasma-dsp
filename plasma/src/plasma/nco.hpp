@@ -94,6 +94,7 @@ public:
     //! Default constructor
     nco(void) noexcept;
 
+    //! Destructor
     ~nco(void) noexcept;
 
     //! Set the frequency

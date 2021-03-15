@@ -1,4 +1,5 @@
 set(plasma_headers
+    plasma/math.hpp
     plasma/nco.hpp
     plasma/nco_no_lookup.ipp
     plasma/nco_use_lookup.ipp

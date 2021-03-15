@@ -1,13 +1,11 @@
 include_directories(..)
 
-find_package(benchmark REQUIRED)
-
-add_executable(benchmark
+add_executable(bm
     nco.cpp
 )
 
-target_link_libraries(benchmark
-    benchmark::benchmark
-    benchmark::benchmark_main
+target_link_libraries(bm
+    benchmark
+    benchmark_main
     pthread
 )

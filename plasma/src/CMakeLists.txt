@@ -1,6 +1,3 @@
-add_subdirectory(benchmark)
-add_subdirectory(test)
-
 set(plasma_headers
     plasma/nco.hpp
     plasma/nco_no_lookup.ipp
@@ -35,3 +32,14 @@ install(
     FILES ${plasma_headers}
     DESTINATION include/plasma
 )
+
+option(BUILD_BENCHMARK "Build the benchmarking utility" OFF)
+option(BUILD_TESTS "Build the tests" OFF)
+
+if (BUILD_BENCHMARK)
+    add_subdirectory(benchmark)
+endif ()
+
+if (BUILD_TESTS)
+    add_subdirectory(test)
+endif ()

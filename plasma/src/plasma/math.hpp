@@ -12,7 +12,25 @@
 
 namespace plasma {
 
-static constexpr auto TWO_PI = 2 * std::acos(-1.0);
+class math
+{
+    math(void) noexcept = delete;
+    ~math(void) noexcept = delete;
+
+public:
+    static constexpr double PI = std::acos(-1.0);
+    static constexpr double TWO_PI = 2 * PI;
+    static constexpr double SQRT2 = std::sqrt(2.0);
+
+    static constexpr double sinc(double x)
+    {
+        if (x == 0) {
+            return 1;
+        }
+
+        return std::sin(PI * x) / (PI * x);
+    }
+};
 
 } // namespace
 

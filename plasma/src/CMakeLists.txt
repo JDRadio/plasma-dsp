@@ -1,8 +1,12 @@
 set(plasma_headers
+    plasma/kaiser.hpp
+    plasma/kaiser.ipp
     plasma/math.hpp
-    plasma/nco.hpp
     plasma/nco_no_lookup.ipp
     plasma/nco_use_lookup.ipp
+    plasma/nco.hpp
+    plasma/rrc.hpp
+    plasma/rrc.ipp
 )
 
 add_library(dsp INTERFACE

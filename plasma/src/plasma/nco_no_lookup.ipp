@@ -24,7 +24,7 @@ nco<SampleType, no_lookup>::nco(void) noexcept :
 template <typename SampleType>
 void nco<SampleType, no_lookup>::set_frequency(double norm_freq) noexcept
 {
-    dtheta_ = (norm_freq < 0 ? norm_freq + 1.0 : norm_freq) * TWO_PI;
+    dtheta_ = (norm_freq < 0 ? norm_freq + 1.0 : norm_freq) * math::TWO_PI;
 }
 
 template <typename SampleType>
@@ -39,8 +39,8 @@ void nco<SampleType, no_lookup>::step(void) noexcept
 {
     theta_ += dtheta_;
 
-    if (theta_ >= TWO_PI) {
-        theta_ -= TWO_PI;
+    if (theta_ >= math::TWO_PI) {
+        theta_ -= math::TWO_PI;
     }
 }
 
@@ -57,8 +57,8 @@ void nco<SampleType, no_lookup>::pll_step(double dphi) noexcept
     dtheta_ += alpha_ * dphi;
     theta_ += beta_ * dphi;
 
-    if (theta_ >= TWO_PI) {
-        theta_ -= TWO_PI;
+    if (theta_ >= math::TWO_PI) {
+        theta_ -= math::TWO_PI;
     }
 }
 
@@ -214,8 +214,8 @@ void nco<SampleType, no_lookup>::mix_up_one(SampleType& re, SampleType& im) noex
 
     theta_ += dtheta_;
 
-    if (theta_ >= TWO_PI) {
-        theta_ -= TWO_PI;
+    if (theta_ >= math::TWO_PI) {
+        theta_ -= math::TWO_PI;
     }
 }
 
@@ -232,8 +232,8 @@ void nco<SampleType, no_lookup>::mix_up_one(std::complex<SampleType>& inout) noe
 
     theta_ += dtheta_;
 
-    if (theta_ >= TWO_PI) {
-        theta_ -= TWO_PI;
+    if (theta_ >= math::TWO_PI) {
+        theta_ -= math::TWO_PI;
     }
 }
 
@@ -251,8 +251,8 @@ void nco<SampleType, no_lookup>::mix_down_one(SampleType& re, SampleType& im) no
 
     theta_ += dtheta_;
 
-    if (theta_ >= TWO_PI) {
-        theta_ -= TWO_PI;
+    if (theta_ >= math::TWO_PI) {
+        theta_ -= math::TWO_PI;
     }
 }
 
@@ -269,8 +269,8 @@ void nco<SampleType, no_lookup>::mix_down_one(std::complex<SampleType>& inout) n
 
     theta_ += dtheta_;
 
-    if (theta_ >= TWO_PI) {
-        theta_ -= TWO_PI;
+    if (theta_ >= math::TWO_PI) {
+        theta_ -= math::TWO_PI;
     }
 }
 

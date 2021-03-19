@@ -8,28 +8,26 @@
 #ifndef PLASMA_DSP_KAISER_HPP_
 #define PLASMA_DSP_KAISER_HPP_
 
+#include "math.hpp"
 #include <vector>
+#include <cmath>
 
 namespace plasma {
 
 //! Kaiser filter generator
+template <typename T>
 class kaiser
 {
     kaiser(void) noexcept = delete;
     ~kaiser(void) noexcept = delete;
 
 public:
-    //! Normalized sinc
-    //! \param[in] x x
-    //! \return Normalized sinc of x
-    static double sinc(double x) noexcept;
-
     //! Creates a Kaiser-windowed filter
     //! \param[in] fc Cut-off frequency
     //! \param[in] df Transition bandwidth
     //! \param[in] att Stop-band attenuation
     //! \return Filter taps
-    static std::vector<float> create_taps(double fc, double df, double att) noexcept;
+    static std::vector<T> create_taps(double fc, double df, double att) noexcept;
 
     //! Calculate the Kaiser window coefficient
     //! \param[in] beta Kaiser beta
@@ -51,5 +49,7 @@ public:
 };
 
 } // namespace
+
+#include "kaiser.ipp"
 
 #endif

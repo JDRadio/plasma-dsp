@@ -46,7 +46,7 @@ void nco<SampleType, use_lookup>::build_lookup_table(void) noexcept
     auto const typed_size = static_cast<double>(size);
 
     for (unsigned int i = 0; i < size; ++i) {
-        lookup_[i] = std::sin(TWO_PI * static_cast<double>(i) / typed_size);
+        lookup_[i] = std::sin(math::TWO_PI * static_cast<double>(i) / typed_size);
     }
 }
 

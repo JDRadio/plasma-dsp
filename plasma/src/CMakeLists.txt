@@ -9,9 +9,7 @@ set(plasma_headers
     plasma/rrc.ipp
 )
 
-add_library(dsp INTERFACE
-    ${plasma_headers}
-)
+add_library(dsp INTERFACE)
 
 target_include_directories(dsp INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/plasma>

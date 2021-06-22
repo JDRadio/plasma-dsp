@@ -1,4 +1,5 @@
-build/
+/build
+/.vscode
 *.swp
 *.aux
 *.fdb_latexmk
@@ -9,4 +10,3 @@ build/
 *.synctex(busy)
 *.m
 *.raw
-.gcc-flags.json

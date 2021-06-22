@@ -2,5 +2,6 @@
 cmake
 
 [requires]
-benchmark/1.5.2
-gtest/1.10.0
+benchmark/1.5.3
+gtest/1.11.0
+fmt/7.1.3

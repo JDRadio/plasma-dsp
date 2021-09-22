@@ -8,5 +8,4 @@ project(plasma
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_subdirectory(plasma)
-add_subdirectory(v1)
+add_subdirectory(v2)

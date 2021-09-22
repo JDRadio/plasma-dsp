@@ -207,8 +207,8 @@ void nco<SampleType, use_lookup>::mix_up_one(SampleType& re, SampleType& im) noe
 {
     auto const a = re;
     auto const b = im;
-    auto const& c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
-    auto const& d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
+    auto const c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
+    auto const d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
 
     re = a * c - b * d;
     im = a * d + b * c;
@@ -221,8 +221,8 @@ void nco<SampleType, use_lookup>::mix_up_one(std::complex<SampleType>& inout) no
 {
     auto const a = inout.real();
     auto const b = inout.imag();
-    auto const& c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
-    auto const& d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
+    auto const c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
+    auto const d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
 
     inout.real(a * c - b * d);
     inout.imag(a * d + b * c);
@@ -236,8 +236,8 @@ void nco<SampleType, use_lookup>::mix_down_one(SampleType& re, SampleType& im) n
 {
     auto const a = re;
     auto const b = im;
-    auto const& c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
-    auto const& d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
+    auto const c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
+    auto const d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
 
     re = a * c + b * d;
     im = b * c - a * d;
@@ -250,8 +250,8 @@ void nco<SampleType, use_lookup>::mix_down_one(std::complex<SampleType>& inout) 
 {
     auto const a = inout.real();
     auto const b = inout.imag();
-    auto const& c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
-    auto const& d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
+    auto const c = lookup_[(theta_ + cos_offset_) >> MANTISSA_SIZE];
+    auto const d = lookup_[(theta_ + sin_offset_) >> MANTISSA_SIZE];
 
     inout.real(a * c + b * d);
     inout.imag(b * c - a * d);

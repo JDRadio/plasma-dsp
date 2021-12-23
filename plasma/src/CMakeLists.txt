@@ -9,19 +9,19 @@ set(plasma_headers
     plasma/rrc.ipp
 )
 
-add_library(dsp INTERFACE)
+add_library(plasma_dsp INTERFACE)
 
-target_include_directories(dsp INTERFACE
+target_include_directories(plasma_dsp INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/plasma>
     $<INSTALL_INTERFACE:include/plasma>
 )
 
-target_compile_features(dsp INTERFACE
+target_compile_features(plasma_dsp INTERFACE
     cxx_std_17
 )
 
 install(
-    TARGETS dsp
+    TARGETS plasma_dsp
     EXPORT plasmaExport
 )
 

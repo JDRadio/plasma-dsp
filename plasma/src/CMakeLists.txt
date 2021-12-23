@@ -19,21 +19,21 @@ target_compile_features(plasma_dsp INTERFACE
     cxx_std_17
 )
 
-install(
-    TARGETS plasma_dsp
-    EXPORT plasmaExport
-)
+# install(
+#     TARGETS plasma_dsp
+#     EXPORT plasmaExport
+# )
 
-install(
-    EXPORT plasmaExport
-    NAMESPACE plasma::
-    DESTINATION lib/cmake/plasma
-)
+# install(
+#     EXPORT plasmaExport
+#     NAMESPACE plasma::
+#     DESTINATION lib/cmake/plasma
+# )
 
-install(
-    FILES ${plasma_headers}
-    DESTINATION include/plasma
-)
+# install(
+#     FILES ${plasma_headers}
+#     DESTINATION include/plasma
+# )
 
 option(BUILD_BENCHMARK "Build the benchmarking utility" OFF)
 option(BUILD_TESTS "Build the tests" OFF)

@@ -38,9 +38,6 @@ target_compile_features(plasma_dsp INTERFACE
 option(PLASMA_BUILD_BENCHMARK "Build the benchmarking utility" OFF)
 option(PLASMA_BUILD_TESTS "Build the tests" OFF)
 
-message(STATUS "plasma-dsp: PLASMA_BUILD_BENCHMARK=${PLASMA_BUILD_BENCHMARK}")
-message(STATUS "plasma-dsp: PLASMA_BUILD_TESTS=${PLASMA_BUILD_TESTS}")
-
 if (PLASMA_BUILD_BENCHMARK)
     add_subdirectory(benchmark)
 endif ()

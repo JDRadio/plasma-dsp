@@ -12,7 +12,7 @@ set(plasma_headers
 add_library(plasma_dsp INTERFACE)
 
 target_include_directories(plasma_dsp INTERFACE
-    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/plasma/include
 )
 
 target_compile_features(plasma_dsp INTERFACE

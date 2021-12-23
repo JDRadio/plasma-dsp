@@ -12,8 +12,7 @@ set(plasma_headers
 add_library(plasma_dsp INTERFACE)
 
 target_include_directories(plasma_dsp INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/plasma>
-    $<INSTALL_INTERFACE:include/plasma>
+    ${PROJECT_SOURCE_DIR}/plasma
 )
 
 target_compile_features(plasma_dsp INTERFACE
